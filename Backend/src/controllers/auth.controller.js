@@ -5,7 +5,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, password, userName, contactNo } = req.body;
+  const { email, password, userName, contactNo,role } = req.body;
 
   if ([email, password, userName, contactNo].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
@@ -16,7 +16,6 @@ const registerUser = asyncHandler(async (req, res) => {
   if (existingUser) {
     throw new ApiError(409, "User with entered email already exists");
   }
-
   const imageLocalPath = req.files?.image?.[0]?.path;
 
   let image;
@@ -28,6 +27,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     userName,
     contactNo,
+    role,
     image: image ? image.url : undefined,
     password,
   });
@@ -80,10 +80,11 @@ const loginUser = asyncHandler(async (req, res) => {
     const { userName, contactNo } = req.body;
   
     if ([userName, contactNo].some((field) => field?.trim() === "")) {
-      throw new ApiError(400, "User name and contact number are required");
+      throw new ApiError(400, "Username and contact number are required");
     }
   
     const user = await User.findById(userId);
+    User.findByIdAndUpdate()
   
     if (!user) {
       throw new ApiError(404, "User not found");
