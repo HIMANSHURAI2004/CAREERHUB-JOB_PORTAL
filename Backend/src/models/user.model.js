@@ -25,9 +25,8 @@ const userSchema = new Schema({
     contactNo: { 
         type: Number, 
         required: [true, "Contact Number field should not be empty"] ,
-        unique: [true, "Contact Number already exists"],
     },
-    image: {// cloudinary url
+    image: {
         type: String,
     },
     role: {
