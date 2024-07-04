@@ -27,7 +27,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 
 //Register User
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, password, userName, contactNo } = req.body;
+  const { email, password, userName, contactNo,role } = req.body;
 
   if ([email, password, userName, contactNo].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
@@ -38,7 +38,6 @@ const registerUser = asyncHandler(async (req, res) => {
   if (existingUser) {
     throw new ApiError(409, "User with entered email already exists");
   }
-
   const imageLocalPath = req.files?.image?.[0]?.path;
   console.log(imageLocalPath);
   let image;
@@ -50,6 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     userName,
     contactNo,
+    role,
     image: image ? image.url : undefined,
     password,
   });
