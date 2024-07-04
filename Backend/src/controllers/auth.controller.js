@@ -13,7 +13,7 @@ const generateAccessAndRefreshToken=async(userId)=>{
       const accessToken=user.generateAccessToken()
       const refreshToken=user.generateRefreshToken()
 
-      user.refreshToken=refreshToken;
+      user.refreshTokens=refreshToken;
       await user.save({validateBeforeSave:false})
 
 
@@ -68,7 +68,7 @@ const registerUser = asyncHandler(async (req, res) => {
 //Login User
 const loginUser= asyncHandler(async (req,res) =>{
 
-  const {email,password}=req.body
+  const {email,password} = req.body;
 
   if(!email)
   {
@@ -146,6 +146,7 @@ const getCurrentUser = asyncHandler(async (req,res) =>{
 
 //Delete User
 const deleteUser = asyncHandler(async (req, res) => {
+  console.log(req.params)
     const { userId } = req.params;
   
     const user = await User.findByIdAndDelete(userId);
