@@ -68,7 +68,7 @@ const registerUser = asyncHandler(async (req, res) => {
 //Login User
 const loginUser = asyncHandler(async (req, res) => {
 
-  const { email, password } = req.body
+  const { email, password} = req.body
 
   if (!email) {
     throw new ApiError(400, "Email is required")
@@ -83,7 +83,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const isPasswordValid = await user.isPasswordCorrect(password)
 
   if (!isPasswordValid) {
-    throw ApiError(401, "Invalid user credentials")
+    throw new ApiError(401, "Invalid user credentials")
   }
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id)
@@ -141,18 +141,26 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     )
 })
 
-//Delete User
-const deleteUser = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
+// Change Password
+const changeCurrentPassword = asyncHandler(async (req,res) =>{
+  const {oldPassword,newPassword}= req.body;
 
-  const user = await User.findByIdAndDelete(userId);
+  const user=await User.findById(req.user?._id);
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
 
-  if (!user) {
-    throw new ApiError(404, "User not found");
+  if(!isPasswordCorrect)
+  {
+      throw new ApiError(400,"Invalid user Password")
   }
 
-  return res.status(200).json(new ApiResponse(200, "User deleted successfully"));
-});
+  user.password=newPassword;
+  await user.save({validateBeforeSave:false})
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200,{},"Password change successfully"))
+
+})
 
 //Update User  
 const updateUser = asyncHandler(async (req, res) => {
@@ -173,16 +181,16 @@ const updateUser = asyncHandler(async (req, res) => {
     {
       new: true
     }
-
+    
   ).select(
     "-password"
   )
-
+  
   return res
-    .status(200)
-    .json(
-      new ApiResponse(200, user, "User details updated successfully")
-    )
+  .status(200)
+  .json(
+    new ApiResponse(200, user, "User details updated successfully")
+  )
 })
 
 //Update image
@@ -195,11 +203,11 @@ const updateImage = asyncHandler(async (req, res) => {
   }
 
   const image = await uploadOnCloudinary(imageLocalPath)
-
+  
   if (!image.url) {
     throw new ApiError(400, "Error while uploading image")
   }
-
+  
   const user = await User.findByIdAndUpdate(
     req.user._id,
     {
@@ -213,14 +221,28 @@ const updateImage = asyncHandler(async (req, res) => {
   ).select(
     "-password"
   )
-
+  
   return res
-    .status(200)
-    .json(
-      new ApiResponse(200, user, "Image updated successfully")
-    )
-
+  .status(200)
+  .json(
+    new ApiResponse(200, user, "Image updated successfully")
+  )
+  
 })
+
+//Delete User
+const deleteUser = asyncHandler(async (req, res) => {
+
+
+  const user = await User.findByIdAndDelete(req.user._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, "User deleted successfully"));
+});
+
 
 
 export {
@@ -231,4 +253,5 @@ export {
   deleteUser,
   updateUser,
   updateImage,
+  changeCurrentPassword
 };
