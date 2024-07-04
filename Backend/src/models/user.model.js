@@ -26,7 +26,7 @@ const userSchema = new Schema({
         type: Number, 
         required: [true, "Contact Number field should not be empty"] ,
     },
-    image: {// cloudinary url
+    image: {
         type: String,
     },
     role: {
