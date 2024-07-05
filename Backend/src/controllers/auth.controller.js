@@ -4,7 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { options } from "../constants.js";
-
+import Company from "../models/company.model.js";
 
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -50,7 +50,7 @@ const registerUser = asyncHandler(async (req, res) => {
     userName,
     contactNo,
     role,
-    image: image ? image.url : undefined,
+    image: image ? image.url : "",
     password,
   });
 
@@ -60,6 +60,45 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
 
+  if(role === "recruiter")
+  {
+    const {companyName , address , website} = req.body;
+
+    if(!companyName && !address)
+    {
+      throw new ApiError(401,"Company Name and Address are required");
+    }
+
+    
+    const userExist = await Company.findOne({recruiter: createdUser._id});
+    if(userExist)
+      {
+        throw new ApiError(401,"Recruiter already owns a company");
+      }
+      
+    // const companyExist = await Company.findOne({companyName});
+    // if(companyExist)
+    // {
+    //   throw new ApiError(401,"Company Already Exists");
+    // }
+
+    const company = await Company.create({
+      companyName,
+      address,
+      website: website ? website : "",
+      recruiter:createdUser._id
+    
+    })
+
+    if(!company)
+    {
+      throw new ApiError(500,"Something went wrong while creating company")
+    }
+
+    return res.status(201).json(new ApiResponse(201,company, "Recruiter registered successfully"));
+  }
+
+  
   return res.status(201).json(new ApiResponse(201, createdUser, "User registered successfully"));
 });
 

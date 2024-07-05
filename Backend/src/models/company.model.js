@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 
 const companySchema = new mongoose.Schema({
-  name: {
+  companyName: {
     type: String,
     required: true,
+    unique:true
   },
   address: {
     type: String,
@@ -11,7 +12,7 @@ const companySchema = new mongoose.Schema({
   },
   website: {
     type: String,
-    required: true,
+    default:""
   },
   recruiter: {
     type: mongoose.Schema.Types.ObjectId,
