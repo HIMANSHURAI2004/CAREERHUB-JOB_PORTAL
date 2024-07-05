@@ -3,6 +3,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import Company from "../models/company.model.js";
+import mongoose from "mongoose";
+import { User } from "../models/user.model.js";
 
 const createJob = asyncHandler(async (req, res) => {
   const { title, description, location, salary} = req.body;
@@ -12,6 +14,13 @@ const createJob = asyncHandler(async (req, res) => {
 
   if ([title, description, location].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
+  }
+
+  const jobExist = await Job.findOne({title,postedBy})
+
+  if(jobExist)
+  {
+    throw new ApiError(400, "Job Already Exist");
   }
 
   const job = await Job.create({
@@ -33,40 +42,55 @@ const createJob = asyncHandler(async (req, res) => {
 });
 
 const getJobs = asyncHandler(async (req, res) => {
-    const query = req.query;
-    const jobs = await Job.find(query).populate('company').populate('postedBy').select("-__v");
-    // const jobs = await Job.aggregate([
-    //   { $match: query },
-    //   { 
-    //     $lookup: {
-    //       from: 'companies', // collection name in MongoDB
-    //       localField: 'company',
-    //       foreignField: '_id',
-    //       as: 'company'
-    //     }
-    //   },
-    //   { 
-    //     $lookup: {
-    //       from: 'users', // collection name in MongoDB
-    //       localField: 'postedBy',
-    //       foreignField: '_id',
-    //       as: 'postedBy'
-    //     }
-    //   },
-    //   {
-    //     $project: {
-    //       __v: 0
-    //     }
-    //   }
-    // ]);
-    
-    if (jobs.length === 0) {
-      return res.status(200).json(new ApiResponse(200, jobs, "No jobs found based on this search"));
-    }
-
-    return res.status(200).json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
+  const query = req.query;
+ 
+  if (query.company) {
+    const company = await Company.findOne({companyName:query.company})
+    query.company = company._id;
   }
-);
+  if (query.postedBy) {
+    const postedBy = await User.findOne({userName:query.postedBy})
+    query.postedBy = postedBy._id;
+  }
+  
+  const jobs = await Job.aggregate([
+    { $match: query },
+    {
+      $lookup: {
+        from: 'companies',
+        localField: 'company',
+        foreignField: '_id',
+        as: 'company'
+      },
+      
+    },
+    {
+      $lookup: {
+        from: 'users', 
+        localField: 'postedBy',
+        foreignField: '_id',
+        as: 'postedBy'
+      }
+    },
+    {
+      $project: {
+        __v: 0,
+        'company.__v': 0,
+        'postedBy.__v': 0,
+        'postedBy.password': 0,
+        'postedBy.refreshToken': 0,
+      }
+    }
+  ]);
+
+  if (jobs.length === 0) {
+    return res.status(200).json(new ApiResponse(200, jobs, "No jobs found based on this search"));
+  }
+
+  return res.status(200).json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
+});
+
+
 
 
 const updateJob = asyncHandler(async (req, res) => {
@@ -81,7 +105,7 @@ const updateJob = asyncHandler(async (req, res) => {
   }
 
   // Find the job by id and postedBy user
-  const job = await Job.findOne({ _id: jobId});
+  const job = await Job.findOne({ _id: jobId, postedBy});
 
   if (!job) {
     throw new ApiError(404, "Job not found");
@@ -105,7 +129,9 @@ const updateJob = asyncHandler(async (req, res) => {
 
 
 const deleteJob = asyncHandler(async (req, res) => {
-  const { jobId } = req.params;
+  //isme yeh verify krna h ki current user h vo hi job delete kr rha h jo usne khud post kri thi
+
+  const { id: jobId } = req.params;
 
   const job = await Job.findByIdAndDelete(jobId);
 
@@ -123,7 +149,7 @@ const getCompanyDetails = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Company not found");
   }
 
-  const populatedCompany = await Company.findById(company._id).populate('recruiter').select("-__v");
+  const populatedCompany = await Company.findById(company._id).select("-__v");
 
   return res.status(200).json(new ApiResponse(200, populatedCompany, "Company details fetched successfully"));
 });
