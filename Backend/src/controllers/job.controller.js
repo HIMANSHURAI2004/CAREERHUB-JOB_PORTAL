@@ -2,6 +2,7 @@ import Job from "../models/job.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
+import Company from "../models/company.model.js";
 
 const createJob = asyncHandler(async (req, res) => {
   const { title, description, location, salary} = req.body;
@@ -115,9 +116,17 @@ const deleteJob = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, null, "Job deleted successfully"));
 });
 
-const getCompanyDetails = asyncHandler(async (req,res) => {
+const getCompanyDetails = asyncHandler(async (req, res) => {
+  const company = req.company;
 
-})
+  if (!company) {
+    throw new ApiError(404, "Company not found");
+  }
+
+  const populatedCompany = await Company.findById(company._id).populate('recruiter').select("-__v");
+
+  return res.status(200).json(new ApiResponse(200, populatedCompany, "Company details fetched successfully"));
+});
 
 export {
   createJob,

@@ -294,6 +294,23 @@ const deleteUser = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, {}, "User deleted successfully"));
 });
 
+const updateCompanyDetails = asyncHandler(async (req, res) => {
+  const { companyName, address, website } = req.body;
+
+  const company = await Company.findOne({ recruiter: req.user._id });
+
+  if (!company) {
+    throw new ApiError(404, "Company not found");
+  }
+
+  if (companyName) company.companyName = companyName;
+  if (address) company.address = address;
+  if (website) company.website = website;
+
+  await company.save();
+
+  return res.status(200).json(new ApiResponse(200, company, "Company details updated successfully"));
+});
 
 
 
@@ -305,5 +322,6 @@ export {
   deleteUser,
   updateUser,
   updateImage,
-  changeCurrentPassword
+  changeCurrentPassword,
+  updateCompanyDetails,
 };
