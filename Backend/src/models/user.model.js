@@ -34,11 +34,10 @@ const userSchema = new Schema({
         enum: ['student', 'recruiter', 'admin'],
         default: 'student',
       },
-    refreshTokens: {
+    refreshToken: {
         type: String,
     },
 },{timestamps : true});
-
 
 userSchema.pre("save", async function (next) {
     if(!this.isModified("password")) return next();

@@ -5,8 +5,9 @@ import { ApiError } from "../utils/ApiError.js";
 
 const createJob = asyncHandler(async (req, res) => {
   const { title, description, company, location, salary, postedBy } = req.body;
+
   // postedBy = req.user._id;
-  //company = req.company;
+  // company = req.company;
   // ek company ka middleware banao jo company ko req me add karega
 
   if ([title, description, company, location, postedBy].some((field) => field?.trim() === "")) {
@@ -107,10 +108,15 @@ const deleteJob = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, null, "Job deleted successfully"));
 });
 
+const getCompanyDetails = asyncHandler(async (req,res) => {
+
+})
+
 export {
   createJob,
   getJobs,
   updateJob,
-  deleteJob
+  deleteJob,
+  getCompanyDetails,
 };
 

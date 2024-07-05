@@ -5,6 +5,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { options } from "../constants.js";
 import Company from "../models/company.model.js";
+import Job from "../models/job.model.js";
+import mongoose from "mongoose";
 
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -271,16 +273,27 @@ const updateImage = asyncHandler(async (req, res) => {
 
 //Delete User
 const deleteUser = asyncHandler(async (req, res) => {
-
-
   const user = await User.findByIdAndDelete(req.user._id);
 
   if (!user) {
     throw new ApiError(404, "User not found");
   }
 
-  return res.status(200).json(new ApiResponse(200, "User deleted successfully"));
+  if (user.role === "recruiter") {
+
+    const company = await Company.findOneAndDelete({ recruiter: user._id });
+    if (!company) {
+      throw new ApiError(500, "Something went wrong while deleting the company associated to this user");
+    }
+    const jobs = await Job.deleteMany({ postedBy: user._id });
+    if (!jobs) {
+      throw new ApiError(500, "Something went wrong while deleting the jobs associated to this user");
+    }
+  }
+
+  return res.status(200).json(new ApiResponse(200, {}, "User deleted successfully"));
 });
+
 
 
 
