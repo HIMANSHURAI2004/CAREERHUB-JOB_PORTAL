@@ -2,6 +2,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
+import Company from "../models/company.model.js";
 
 export const verifyJWT = asyncHandler(async (req, _, next) => {
     try {
@@ -17,12 +18,21 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
             throw new ApiError(401, "Invalid access token");
         }
 
-        const user = await User.findById(decodedToken._id).select("-password -refreshTokens");
+        const user = await User.findById(decodedToken._id).select("-password -refreshToken");
 
         if (!user) {
             throw new ApiError(401, "Invalid access token");
         }
-
+        if(user.role === "recruiter")
+        {
+            const company = await Company.findOne({recruiter: user._id});
+            if(!company)
+            {
+                throw new ApiError(401,"Company Does Not Exist !!")
+            }
+            req.company = company;
+        }
+        
         req.user = user;
         next();
     } catch (error) {

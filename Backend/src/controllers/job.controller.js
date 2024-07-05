@@ -4,12 +4,12 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 
 const createJob = asyncHandler(async (req, res) => {
-  const { title, description, company, location, salary, postedBy } = req.body;
-  // postedBy = req.user._id;
-  //company = req.company;
-  // ek company ka middleware banao jo company ko req me add karega
+  const { title, description, location, salary} = req.body;
+  const postedBy = req.user;
+  const company = req.company._id;
 
-  if ([title, description, company, location, postedBy].some((field) => field?.trim() === "")) {
+
+  if ([title, description, location].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
   }
 
@@ -22,7 +22,7 @@ const createJob = asyncHandler(async (req, res) => {
     postedBy,
   });
 
-  const createdJob = await Job.findById(job._id).populate('company').populate('postedBy').select("-__v");
+  const createdJob = await Job.findById(job._id).populate('company').select("-__v");
 
   if (!createdJob) {
     throw new ApiError(500, "Something went wrong while creating the job");
@@ -67,33 +67,41 @@ const getJobs = asyncHandler(async (req, res) => {
   }
 );
 
-const updateJob = asyncHandler(async (req, res) => {
-  const { jobId } = req.params;
-  const { title, description, company, location, salary } = req.body;
 
-  if ([title, description, company, location].some((field) => field?.trim() === "")) {
-    throw new ApiError(400, "All fields are required");
+const updateJob = asyncHandler(async (req, res) => {
+  const postedBy = req.user;
+  const { id: jobId } = req.params;
+  console.log(jobId);
+  const { title, description, location, salary, company } = req.body;
+
+  // Check if at least one field is provided
+  if (!(title || description || location || salary || company)) {
+    throw new ApiError(400, "At least one field is required");
   }
 
-  
-  const job = await Job.findById(jobId);
+  // Find the job by id and postedBy user
+  const job = await Job.findOne({ _id: jobId});
 
   if (!job) {
     throw new ApiError(404, "Job not found");
   }
-  //findbyidandupdate
-  job.title = title;
-  job.description = description;
-  job.company = company;
-  job.location = location;
-  job.salary = salary;
 
+  // Update job fields if provided
+  job.title = title !== undefined ? title : job.title;
+  job.description = description !== undefined ? description : job.description;
+  job.company = company !== undefined ? company : job.company;
+  job.location = location !== undefined ? location : job.location;
+  job.salary = salary !== undefined ? salary : job.salary;
+
+  // Save the updated job
   await job.save();
 
-  const updatedJob = await Job.findById(jobId).populate('company').populate('postedBy').select("-__v");
+  // Fetch the updated job details
+  const updatedJob = await Job.findById(jobId).select("-__v");
 
   return res.status(200).json(new ApiResponse(200, updatedJob, "Job updated successfully"));
 });
+
 
 const deleteJob = asyncHandler(async (req, res) => {
   const { jobId } = req.params;

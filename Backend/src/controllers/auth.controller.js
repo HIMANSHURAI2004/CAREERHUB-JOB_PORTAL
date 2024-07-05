@@ -54,7 +54,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
   });
 
-  const createdUser = await User.findById(user._id).select("-password -refreshTokens");
+  const createdUser = await User.findById(user._id).select("-password -refreshToken");
 
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registering the user");
@@ -76,11 +76,11 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(401,"Recruiter already owns a company");
       }
       
-    // const companyExist = await Company.findOne({companyName});
-    // if(companyExist)
-    // {
-    //   throw new ApiError(401,"Company Already Exists");
-    // }
+    const companyExist = await Company.findOne({companyName});
+    if(companyExist)
+    {
+      throw new ApiError(401,"Company Already Exists");
+    }
 
     const company = await Company.create({
       companyName,
