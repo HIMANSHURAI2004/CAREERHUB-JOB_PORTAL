@@ -15,7 +15,7 @@ router.route("/register").post(upload.fields([
 router.route("/login").post(loginUser);
 router.route("/logout").post(verifyJWT,logoutUser);
 
-router.route("/getuser").get(verifyJWT,getCurrentUser);
+router.route("/get-user").get(verifyJWT,getCurrentUser);
 
 router.route("/change-password").patch(verifyJWT,changeCurrentPassword);
 
