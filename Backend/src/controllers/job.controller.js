@@ -41,6 +41,19 @@ const createJob = asyncHandler(async (req, res) => {
   return res.status(201).json(new ApiResponse(201, createdJob, "Job created successfully"));
 });
 
+const getJob = asyncHandler(async (req, res) => {
+  const { id: jobId } = req.params;
+
+  const job = await Job.findOne({_id:jobId});
+
+  if(!job)
+  {
+    throw new ApiError(404,"Job Not Found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, job, "Job fetched successfully"));
+});
+
 const getJobs = asyncHandler(async (req, res) => {
   const query = req.query;
  
@@ -96,7 +109,7 @@ const getJobs = asyncHandler(async (req, res) => {
 const updateJob = asyncHandler(async (req, res) => {
   const postedBy = req.user;
   const { id: jobId } = req.params;
-  console.log(jobId);
+  // console.log(jobId);
   const { title, description, location, salary, company } = req.body;
 
   // Check if at least one field is provided
@@ -156,6 +169,7 @@ const getCompanyDetails = asyncHandler(async (req, res) => {
 
 export {
   createJob,
+  getJob,
   getJobs,
   updateJob,
   deleteJob,
