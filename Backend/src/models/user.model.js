@@ -33,7 +33,11 @@ const userSchema = new Schema({
         type: String,
         enum: ['student', 'recruiter', 'admin'],
         default: 'student',
-      },
+    },
+    resume:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Resume",
+    },
     refreshToken: {
         type: String,
     },

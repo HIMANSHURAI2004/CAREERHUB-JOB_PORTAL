@@ -7,6 +7,7 @@ import { options } from "../constants.js";
 import Company from "../models/company.model.js";
 import Job from "../models/job.model.js";
 import mongoose from "mongoose";
+import { Resume } from "../models/resume.model.js";
 
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -290,7 +291,7 @@ const deleteUser = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Something went wrong while deleting the jobs associated to this user");
     }
   }
-
+  
   return res.status(200).json(new ApiResponse(200, {}, "User deleted successfully"));
 });
 
@@ -312,6 +313,82 @@ const updateCompanyDetails = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, company, "Company details updated successfully"));
 });
 
+//Add Resume
+const addResume = asyncHandler(async (req, res) => {
+  const { fullName, email, phone, linkedin, github, skills, workExperience, education, projects } = req.body;
+
+  // if ([fullName, email, phone].some((field) => field?.trim() === "")) {
+  if (!fullName && !email && !phone) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  const resume = await Resume.create({
+    personalDetails: {
+      fullName,
+      email,
+      phone,
+      linkedin: linkedin ? linkedin : "",
+      github: github ? github : "",
+    },
+    skills: skills ? skills : [],
+    workExperience: workExperience ? workExperience : [],
+    education: education ? education : [],
+    projects: projects ? projects : [],
+  });
+  
+  if (!resume) {
+    throw new ApiError(500, "Something went wrong while adding resume");
+  }
+  //TODO : Add resume to user
+  const user = await User.findById(req.user._id);
+  user.resume = resume._id;
+  await user.save({ validateBeforeSave: false });
+
+  return res.status(201).json(new ApiResponse(201, resume, "Resume created successfully"));
+
+});
+
+//Update Resume
+const updateResume = asyncHandler(async (req, res) => {
+    const { fullName, email, phone, linkedin, github, skills, workExperience, education, projects } = req.body;
+
+    if(!(fullName && email && phone && linkedin && github && skills && workExperience && education && projects))
+    {
+        throw new ApiError(400,"Atleast One field is required");
+    }
+
+    const resume = await Resume.findById(req.user.resume);
+
+    if(!resume)
+    {
+        throw new ApiError(404,"Resume not found");
+    }
+
+    resume.personalDetails.fullName = fullName ? fullName : resume.personalDetails.fullName;
+    resume.personalDetails.email = email ? email : resume.personalDetails.email;
+    resume.personalDetails.phone = phone ? phone : resume.personalDetails.phone;
+    resume.personalDetails.linkedin = linkedin ? linkedin : resume.personalDetails.linkedin;
+    resume.personalDetails.github = github ? github : resume.personalDetails.github;
+    resume.skills = skills ? skills : resume.skills;
+    resume.workExperience = workExperience ? workExperience : resume.workExperience;
+    resume.education = education ? education : resume.education;
+    resume.projects = projects ? projects : resume.projects;
+
+    await resume.save();
+
+    return res.status(200).json(new ApiResponse(200,resume,"Resume updated successfully"));
+})
+
+//delete Resume
+const deleteResume = asyncHandler(async (req, res) => {
+  const resume = await Resume.findByIdAndDelete(req.user.resume);
+
+  if (!resume) {
+    throw new ApiError(404, "Resume not found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, {}, "Resume deleted successfully"));
+});
 
 
 export {
@@ -324,4 +401,7 @@ export {
   updateImage,
   changeCurrentPassword,
   updateCompanyDetails,
+  addResume,
+  updateResume,
+  deleteResume,
 };
