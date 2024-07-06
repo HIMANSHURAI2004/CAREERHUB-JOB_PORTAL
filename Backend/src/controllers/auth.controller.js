@@ -348,6 +348,16 @@ const addResume = asyncHandler(async (req, res) => {
 
 });
 
+const getResumeDetails = asyncHandler(async (req, res) => {
+  const resume = await Resume.findById(req.user.resume);
+
+  if (!resume) {
+    throw new ApiError(404, "Resume not found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, resume, "Resume fetched successfully"));
+})
+
 //Update Resume
 const updateResume = asyncHandler(async (req, res) => {
     const { fullName, email, phone, linkedin, github, skills, workExperience, education, projects } = req.body;
@@ -402,6 +412,7 @@ export {
   changeCurrentPassword,
   updateCompanyDetails,
   addResume,
+  getResumeDetails,
   updateResume,
   deleteResume,
 };
