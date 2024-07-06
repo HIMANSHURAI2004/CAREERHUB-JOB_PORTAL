@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 import { User } from "../models/user.model.js";
 
 const createJob = asyncHandler(async (req, res) => {
-  const { title, description, location, salary} = req.body;
+  const { title, description, location, salary , deadline} = req.body;
   const postedBy = req.user;
   const company = req.company._id;
 
@@ -30,6 +30,7 @@ const createJob = asyncHandler(async (req, res) => {
     location,
     salary: salary ? salary : "Depends on performance",
     postedBy,
+    deadline: deadline ? deadline : new Date('9999-12-31')
   });
 
   const createdJob = await Job.findById(job._id).populate('company').select("-__v");
@@ -110,10 +111,10 @@ const updateJob = asyncHandler(async (req, res) => {
   const postedBy = req.user;
   const { id: jobId } = req.params;
   // console.log(jobId);
-  const { title, description, location, salary, company } = req.body;
+  const { title, description, location, salary, company,deadline } = req.body;
 
   // Check if at least one field is provided
-  if (!(title || description || location || salary || company)) {
+  if (!(title || description || location || salary || company || deadline)) {
     throw new ApiError(400, "At least one field is required");
   }
 
@@ -130,6 +131,7 @@ const updateJob = asyncHandler(async (req, res) => {
   job.company = company !== undefined ? company : job.company;
   job.location = location !== undefined ? location : job.location;
   job.salary = salary !== undefined ? salary : job.salary;
+  job.deadline = deadline !== undefined ? deadline : job.deadline;
 
   // Save the updated job
   await job.save();

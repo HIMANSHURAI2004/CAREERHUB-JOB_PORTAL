@@ -27,7 +27,12 @@ const jobSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  
+  deadline: {
+    type: Date,
+    required: true,
+    default: new Date('9999-12-31')
+  },
+
 }, { timestamps: true });
 
 const Job = mongoose.model('Job', jobSchema);
