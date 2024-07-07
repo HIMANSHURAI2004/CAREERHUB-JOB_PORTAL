@@ -1,9 +1,11 @@
 
+import SignUp from "@/pages/SignUp"
+
 function App() {
 
   return (
-    <div className='text-center'>
-      App
+    <div className='text-center bg-black'>
+      <SignUp />
     </div>
   )
 }
