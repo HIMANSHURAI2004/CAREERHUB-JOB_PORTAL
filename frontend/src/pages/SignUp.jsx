@@ -217,7 +217,7 @@ function SignUp() {
                         </form>
                         <div className="text-center text-sm">
                             Already have an account?{' '}
-                            <Link to="/signin" className="font-semibold text-blue-600">
+                            <Link to="/login" className="font-semibold text-blue-600">
                                 Sign in
                             </Link>
                         </div>
