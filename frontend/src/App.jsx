@@ -1,14 +1,13 @@
 import * as React from "react"
  
-import { LoginPage } from "./pages/LoginPage"
-
-
 import SignUp from "@/pages/SignUp"
+import Login from "./pages/Login"
 
 function App() {
   return (
-    <div className='text-center bg-black'>
+    <div className='flex justify-evenly'>
       <SignUp />
+      {/* <Login/> */}
     </div>
   )
 }
