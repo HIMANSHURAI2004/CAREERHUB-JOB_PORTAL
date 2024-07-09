@@ -29,10 +29,10 @@ router.route("/delete-user").delete(verifyJWT , deleteUser);
 
 
 
-router.route("/add-Resume").post(verifyJWT,addResume);
-router.route("/get-Resume").get(verifyJWT,getResumeDetails);
-router.route("/update-Resume").patch(verifyJWT,updateResume);
-router.route("/delete-Resume").delete(verifyJWT,deleteResume);
+router.route("/add-resume").post(verifyJWT,addResume);
+router.route("/get-resume").get(verifyJWT,getResumeDetails);
+router.route("/update-resume").patch(verifyJWT,updateResume);
+router.route("/delete-resume").delete(verifyJWT,deleteResume);
 
 
 export default router
