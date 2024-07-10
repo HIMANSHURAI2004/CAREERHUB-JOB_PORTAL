@@ -7,6 +7,7 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import AddResume from './pages/AddResume';
+import PostJob from './pages/PostJob';
 
 const router = (
   <BrowserRouter>
@@ -14,7 +15,7 @@ const router = (
       <Route path="/" element={<Home />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/dashboard" element={<AddResume />} />
+      <Route path="/dashboard" element={<PostJob/>} />
     </Routes>
   </BrowserRouter>
 );

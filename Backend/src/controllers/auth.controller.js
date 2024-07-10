@@ -6,7 +6,6 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { options } from "../constants.js";
 import Company from "../models/company.model.js";
 import Job from "../models/job.model.js";
-import mongoose from "mongoose";
 import { Resume } from "../models/resume.model.js";
 
 
