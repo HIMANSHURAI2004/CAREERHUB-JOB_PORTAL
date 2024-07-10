@@ -3,15 +3,19 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import Company from "../models/company.model.js";
-import { User } from "../models/user.model.js";
 
 const createJob = asyncHandler(async (req, res) => {
-  const { title, description, location, salary, deadline, workExperienceMinYears, isRemote, skillsRequired, employmentType, industry } = req.body;
+  const { title, description, locations, salary, deadline, workExperienceMinYears, isRemote, skillsRequired, employmentType, industry } = req.body;
   const postedBy = req.user;
   const company = req.company._id;
 
-  if ([title, description, location].some((field) => field?.trim() === "")) {
+  if ([title, description].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
+  }
+
+  let parsedLocations = locations ? locations.split(",").map(loc => loc.trim()) : [];
+  if (parsedLocations.length === 0) {
+    parsedLocations.push("Remote");
   }
 
   const jobExist = await Job.findOne({ title, postedBy });
@@ -24,15 +28,15 @@ const createJob = asyncHandler(async (req, res) => {
     title,
     description,
     company,
-    location,
+    locations: parsedLocations,
     salary: salary ? salary : "Depends on performance",
     postedBy,
     deadline: deadline ? deadline : new Date('9999-12-31'),
     workExperienceMinYears: workExperienceMinYears ? workExperienceMinYears : 0,
     isRemote: isRemote ? isRemote : false,
-    skillsRequired: skillsRequired ? skillsRequired : [],
+    skillsRequired: skillsRequired ? skillsRequired.split(",").map(skill => skill.trim()) : [],
     employmentType: employmentType ? employmentType : 'Full-time',
-    industry : industry ? industry : ''
+    industry: industry ? industry : ''
   });
 
   const createdJob = await Job.findById(job._id).populate('company').select("-__v");
@@ -43,6 +47,7 @@ const createJob = asyncHandler(async (req, res) => {
 
   return res.status(201).json(new ApiResponse(201, createdJob, "Job created successfully"));
 });
+
 
 const getJob = asyncHandler(async (req, res) => {
   const { id: jobId } = req.params;
@@ -119,9 +124,9 @@ const getJobs = asyncHandler(async (req, res) => {
 const updateJob = asyncHandler(async (req, res) => {
   const postedBy = req.user;
   const { id: jobId } = req.params;
-  const { title, description, location, salary, company, deadline, workExperienceMinYears, isRemote, skillsRequired, employmentType, industry } = req.body;
+  const { title, description, locations, salary, company, deadline, workExperienceMinYears, isRemote, skillsRequired, employmentType, industry } = req.body;
 
-  if (!(title || description || location || salary || company || deadline )) {
+  if (!(title || description || locations || salary || company || deadline )) {
     throw new ApiError(400, "At least one field is required");
   }
 
@@ -134,12 +139,16 @@ const updateJob = asyncHandler(async (req, res) => {
   job.title = title !== undefined ? title : job.title;
   job.description = description !== undefined ? description : job.description;
   job.company = company !== undefined ? company : job.company;
-  job.location = location !== undefined ? location : job.location;
+  
+  job.locations = locations !== undefined ? locations.split(",").map(loc => loc.trim()) : job.locations;
+
   job.salary = salary !== undefined ? salary : job.salary;
   job.deadline = deadline !== undefined ? deadline : job.deadline;
   job.workExperienceMinYears = workExperienceMinYears !== undefined ? workExperienceMinYears : job.workExperienceMinYears;
   job.isRemote = isRemote !== undefined ? isRemote : job.isRemote;
-  job.skillsRequired = skillsRequired !== undefined ? skillsRequired : job.skillsRequired;
+
+  job.skillsRequired = skillsRequired !== undefined ? skillsRequired.split(",").map(skill => skill.trim()) : job.skillsRequired;
+
   job.employmentType = employmentType !== undefined ? employmentType : job.employmentType;
   job.industry = industry !== undefined ? industry : job.industry;
 
@@ -149,6 +158,7 @@ const updateJob = asyncHandler(async (req, res) => {
 
   return res.status(200).json(new ApiResponse(200, updatedJob, "Job updated successfully"));
 });
+
 
 const deleteJob = asyncHandler(async (req, res) => {
   const { id: jobId } = req.params;
@@ -163,6 +173,7 @@ const deleteJob = asyncHandler(async (req, res) => {
 });
 
 const getCompanyDetails = asyncHandler(async (req, res) => {
+
   const company = req.company;
 
   if (!company) {
