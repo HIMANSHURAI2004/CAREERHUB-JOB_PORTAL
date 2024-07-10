@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from 'react';
 import jobImage from './authbgimage.png';
 import logo from "./careerhublogo.png"
-
+import { useNavigate } from "react-router-dom";
 import {
     Select,
     SelectContent,
@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 
 function SignUp() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         userName: '',
         email: '',
@@ -77,6 +78,7 @@ function SignUp() {
                 throw new Error(errorData.message || 'Failed to register user');
             }
 
+            navigate('/login');
             const responseData = await response.json();
             // Handle success, redirect user or show success message
             console.log(responseData);
