@@ -55,7 +55,7 @@ function Login() {
         } catch (error) {
             // Handle error, show error message
             console.log(error.message);
-            setErrorMessage(error.message || 'Failed to Login ');
+            setErrorMessage(error.response.data?.message || 'Failed to Login ');
         }
     };
 
@@ -98,10 +98,10 @@ function Login() {
                                                 <div className="text-end my-1">
                                                     <Link to='/forgot-password' className="text-xs text-blue-600 font-medium">Forgot Password?</Link>
                                                 </div>
+                                                {errorMessage && (
+                                                    <div className="text-red-500 text-sm">{errorMessage}</div>
+                                                )}
                                             </div>
-                                            {errorMessage && (
-                                                <div className="text-red-500 text-sm">{errorMessage}</div>
-                                            )}
                                         </div>
                                         <Button type="submit" className="w-full mt-2 bg-blue-600 hover:bg-blue-900">
                                             Login
