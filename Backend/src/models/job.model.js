@@ -33,6 +33,28 @@ const jobSchema = new mongoose.Schema({
     default: new Date('9999-12-31')
   },
 
+  workExperienceMinYears: { ////////////
+    type: Number,
+    default: 0,
+  },
+  isRemote: {
+    type: Boolean,
+    default: false,
+  },
+  skillsRequired: {
+    type: [String],
+    default: [],
+  },
+  employmentType: {
+    type: String,
+    enum: ['Full-time', 'Part-time', 'Contract', 'Internship'],
+    default: 'Full-time',
+  },
+  industry: {
+    type: String,
+    default: '',
+  },  //////////////
+
 }, { timestamps: true });
 
 const Job = mongoose.model('Job', jobSchema);

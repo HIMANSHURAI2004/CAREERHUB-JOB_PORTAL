@@ -3,23 +3,20 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import Company from "../models/company.model.js";
-import mongoose from "mongoose";
 import { User } from "../models/user.model.js";
 
 const createJob = asyncHandler(async (req, res) => {
-  const { title, description, location, salary , deadline} = req.body;
+  const { title, description, location, salary, deadline, workExperienceMinYears, isRemote, skillsRequired, employmentType, industry } = req.body;
   const postedBy = req.user;
   const company = req.company._id;
-
 
   if ([title, description, location].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
   }
 
-  const jobExist = await Job.findOne({title,postedBy})
+  const jobExist = await Job.findOne({ title, postedBy });
 
-  if(jobExist)
-  {
+  if (jobExist) {
     throw new ApiError(400, "Job Already Exist");
   }
 
@@ -30,7 +27,12 @@ const createJob = asyncHandler(async (req, res) => {
     location,
     salary: salary ? salary : "Depends on performance",
     postedBy,
-    deadline: deadline ? deadline : new Date('9999-12-31')
+    deadline: deadline ? deadline : new Date('9999-12-31'),
+    workExperienceMinYears: workExperienceMinYears ? workExperienceMinYears : 0,
+    isRemote: isRemote ? isRemote : false,
+    skillsRequired: skillsRequired ? skillsRequired : [],
+    employmentType: employmentType ? employmentType : 'Full-time',
+    industry : industry ? industry : ''
   });
 
   const createdJob = await Job.findById(job._id).populate('company').select("-__v");
@@ -45,57 +47,67 @@ const createJob = asyncHandler(async (req, res) => {
 const getJob = asyncHandler(async (req, res) => {
   const { id: jobId } = req.params;
 
-  const job = await Job.findOne({_id:jobId});
+  const job = await Job.findOne({ _id: jobId });
 
-  if(!job)
-  {
-    throw new ApiError(404,"Job Not Found");
+  if (!job) {
+    throw new ApiError(404, "Job Not Found");
   }
 
   return res.status(200).json(new ApiResponse(200, job, "Job fetched successfully"));
 });
 
+// const getJobs = asyncHandler(async (req, res) => {
+//   const query = req.query;
+
+//   if (query.company) {
+//     const company = await Company.findOne({ companyName: query.company });
+//     query.company = company._id;
+//   }
+//   if (query.postedBy) {
+//     const postedBy = await User.findOne({ userName: query.postedBy });
+//     query.postedBy = postedBy._id;
+//   }
+
+//   const jobs = await Job.aggregate([
+//     { $match: query },
+//     {
+//       $lookup: {
+//         from: 'companies',
+//         localField: 'company',
+//         foreignField: '_id',
+//         as: 'company'
+//       }
+//     },
+//     {
+//       $lookup: {
+//         from: 'users',
+//         localField: 'postedBy',
+//         foreignField: '_id',
+//         as: 'postedBy'
+//       }
+//     },
+//     {
+//       $project: {
+//         __v: 0,
+//         'company.__v': 0,
+//         'postedBy.__v': 0,
+//         'postedBy.password': 0,
+//         'postedBy.refreshToken': 0,
+//       }
+//     }
+//   ]);
+
+//   if (jobs.length === 0) {
+//     return res.status(200).json(new ApiResponse(200, jobs, "No jobs found based on this search"));
+//   }
+
+//   return res.status(200).json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
+// });
+
 const getJobs = asyncHandler(async (req, res) => {
   const query = req.query;
- 
-  if (query.company) {
-    const company = await Company.findOne({companyName:query.company})
-    query.company = company._id;
-  }
-  if (query.postedBy) {
-    const postedBy = await User.findOne({userName:query.postedBy})
-    query.postedBy = postedBy._id;
-  }
-  
-  const jobs = await Job.aggregate([
-    { $match: query },
-    {
-      $lookup: {
-        from: 'companies',
-        localField: 'company',
-        foreignField: '_id',
-        as: 'company'
-      },
-      
-    },
-    {
-      $lookup: {
-        from: 'users', 
-        localField: 'postedBy',
-        foreignField: '_id',
-        as: 'postedBy'
-      }
-    },
-    {
-      $project: {
-        __v: 0,
-        'company.__v': 0,
-        'postedBy.__v': 0,
-        'postedBy.password': 0,
-        'postedBy.refreshToken': 0,
-      }
-    }
-  ]);
+
+  const jobs = await Job.find(query);
 
   if (jobs.length === 0) {
     return res.status(200).json(new ApiResponse(200, jobs, "No jobs found based on this search"));
@@ -104,48 +116,41 @@ const getJobs = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
 });
 
-
-
-
 const updateJob = asyncHandler(async (req, res) => {
   const postedBy = req.user;
   const { id: jobId } = req.params;
-  // console.log(jobId);
-  const { title, description, location, salary, company,deadline } = req.body;
+  const { title, description, location, salary, company, deadline, workExperienceMinYears, isRemote, skillsRequired, employmentType, industry } = req.body;
 
-  // Check if at least one field is provided
-  if (!(title || description || location || salary || company || deadline)) {
+  if (!(title || description || location || salary || company || deadline )) {
     throw new ApiError(400, "At least one field is required");
   }
 
-  // Find the job by id and postedBy user
-  const job = await Job.findOne({ _id: jobId, postedBy});
+  const job = await Job.findOne({ _id: jobId, postedBy });
 
   if (!job) {
     throw new ApiError(404, "Job not found");
   }
 
-  // Update job fields if provided
   job.title = title !== undefined ? title : job.title;
   job.description = description !== undefined ? description : job.description;
   job.company = company !== undefined ? company : job.company;
   job.location = location !== undefined ? location : job.location;
   job.salary = salary !== undefined ? salary : job.salary;
   job.deadline = deadline !== undefined ? deadline : job.deadline;
+  job.workExperienceMinYears = workExperienceMinYears !== undefined ? workExperienceMinYears : job.workExperienceMinYears;
+  job.isRemote = isRemote !== undefined ? isRemote : job.isRemote;
+  job.skillsRequired = skillsRequired !== undefined ? skillsRequired : job.skillsRequired;
+  job.employmentType = employmentType !== undefined ? employmentType : job.employmentType;
+  job.industry = industry !== undefined ? industry : job.industry;
 
-  // Save the updated job
   await job.save();
 
-  // Fetch the updated job details
   const updatedJob = await Job.findById(jobId).select("-__v");
 
   return res.status(200).json(new ApiResponse(200, updatedJob, "Job updated successfully"));
 });
 
-
 const deleteJob = asyncHandler(async (req, res) => {
-  //isme yeh verify krna h ki current user h vo hi job delete kr rha h jo usne khud post kri thi
-
   const { id: jobId } = req.params;
 
   const job = await Job.findByIdAndDelete(jobId);
@@ -177,4 +182,5 @@ export {
   deleteJob,
   getCompanyDetails,
 };
+
 
