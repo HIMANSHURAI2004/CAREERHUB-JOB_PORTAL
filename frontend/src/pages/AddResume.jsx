@@ -130,9 +130,9 @@ function AddResume() {
         try {
             const response = await fetch('http://localhost:3000/api/v1/user/add-resume', {
                 method: 'POST',
+                credentials: 'include', // Important to include cookies
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${response.body.refreshToken}`,
                 },
                 body: JSON.stringify(formData),
             });
@@ -382,14 +382,14 @@ function AddResume() {
                             </div>
                             {formData.projects.map((project, index) => (
                                 <div key={`projects-${index}`} className='w-full flex gap-4'>
-                                        <Label htmlFor={`project-${index}`}>Project {index + 1}</Label>
-                                        <Input
-                                            id={`project-${index}`}
-                                            type='text'
-                                            value={project}
-                                            onChange={(e) => handleProjectsChange(index, e.target.value)}
-                                            placeholder={`Project ${index + 1}`}
-                                        />
+                                    <Label htmlFor={`project-${index}`}>Project {index + 1}</Label>
+                                    <Input
+                                        id={`project-${index}`}
+                                        type='text'
+                                        value={project}
+                                        onChange={(e) => handleProjectsChange(index, e.target.value)}
+                                        placeholder={`Project ${index + 1}`}
+                                    />
                                     <div className='w-full flex '>
                                         <Button type='button' onClick={() => handleRemoveProject(index)} className='text-red-500'>
                                             Remove
