@@ -14,18 +14,18 @@ const resumeSchema = new Schema({
     skills: [String],
     workExperience: [
         {
-            jobTitle: { type: String, required: true },
-            company: { type: String, required: true },
+            jobTitle: { type: String },
+            company: { type: String },
             location: String,
-            startDate: { type: Date, required: true },
+            startDate: { type: Date },
             endDate: Date,
             responsibilities: String
         }
     ],
     education: [
         {
-            degree: { type: String, required: true },
-            institution: { type: String, required: true },
+            degree: { type: String},
+            institution: { type: String },
             location: String,
             start_date: Date,
             end_date: Date,

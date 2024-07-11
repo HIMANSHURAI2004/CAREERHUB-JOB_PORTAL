@@ -106,10 +106,10 @@ function Login() {
                                                         Forgot Password?
                                                     </Link>
                                                 </div>
+                                                {errorMessage && (
+                                                    <div className="text-red-500 text-sm">{errorMessage}</div>
+                                                )}
                                             </div>
-                                            {errorMessage && (
-                                                <div className="text-red-500 text-sm">{errorMessage}</div>
-                                            )}
                                         </div>
                                         <Button type="submit" className="w-full mt-2 bg-blue-600 hover:bg-blue-900" disabled={isLoading}>
                                             {isLoading ? (
