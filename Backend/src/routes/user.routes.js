@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {addResume, changeCurrentPassword, deleteResume, deleteUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser} from "../controllers/auth.controller.js"
+import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser} from "../controllers/auth.controller.js"
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/user.middleware.js";
 
@@ -14,6 +14,8 @@ router.route("/register").post(upload.fields([
 
 router.route("/login").post(loginUser);
 router.route("/logout").post(verifyJWT,logoutUser);
+
+router.route("/get-user-from-id/:id").get(getUser);
 
 router.route("/get-user").get(verifyJWT,getCurrentUser);
 

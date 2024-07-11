@@ -185,6 +185,18 @@ const getCompanyDetails = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, populatedCompany, "Company details fetched successfully"));
 });
 
+const getCompanyDetailsById = asyncHandler(async (req, res) => {
+  const { id: companyId } = req.params;
+
+  const company = await Company.findOne({ _id: companyId });
+
+  if (!company) {
+    throw new ApiError(404, "Company Not Found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, company, "Company fetched successfully"));
+});
+
 export {
   createJob,
   getJob,
@@ -192,6 +204,7 @@ export {
   updateJob,
   deleteJob,
   getCompanyDetails,
+  getCompanyDetailsById,
 };
 
 

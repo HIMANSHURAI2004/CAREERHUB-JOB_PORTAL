@@ -29,7 +29,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 
 //Register User
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, password, userName, contactNo,role } = req.body;
+  const { email, password, userName, contactNo, role } = req.body;
 
   if ([email, password, userName, contactNo].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
@@ -40,8 +40,26 @@ const registerUser = asyncHandler(async (req, res) => {
   if (existingUser) {
     throw new ApiError(409, "User with entered email already exists");
   }
+
+  if (role === "recruiter") {
+    const { companyName, address} = req.body;
+
+    if (!companyName || !address) {
+      throw new ApiError(400, "Company Name and Address are required");
+    }
+
+    const userExist = await Company.findOne({ recruiter: existingUser?._id });
+    if (userExist) {
+      throw new ApiError(409, "Recruiter already owns a company");
+    }
+    const companyExist = await Company.findOne({ companyName });
+    if (companyExist) {
+      throw new ApiError(409, "Company Already Exists");
+    }
+  }
+
+  // Now create the user
   const imageLocalPath = req.files?.image?.[0]?.path;
-  console.log(imageLocalPath);
   let image;
   if (imageLocalPath) {
     image = await uploadOnCloudinary(imageLocalPath);
@@ -62,45 +80,23 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
 
-  if(role === "recruiter")
-  {
-    const {companyName , address , website} = req.body;
-
-    if(!companyName && !address)
-    {
-      throw new ApiError(401,"Company Name and Address are required");
-    }
-
-    
-    const userExist = await Company.findOne({recruiter: createdUser._id});
-    if(userExist)
-      {
-        throw new ApiError(401,"Recruiter already owns a company");
-      }
-      
-    const companyExist = await Company.findOne({companyName});
-    if(companyExist)
-    {
-      throw new ApiError(401,"Company Already Exists");
-    }
+  if (role === "recruiter") {
+    const { companyName, address, website } = req.body;
 
     const company = await Company.create({
       companyName,
       address,
-      website: website ? website : "",
-      recruiter:createdUser._id
-    
-    })
+      website: website || "",
+      recruiter: createdUser._id,
+    });
 
-    if(!company)
-    {
-      throw new ApiError(500,"Something went wrong while creating company")
+    if (!company) {
+      throw new ApiError(500, "Something went wrong while creating company");
     }
 
-    return res.status(201).json(new ApiResponse(201,company, "Recruiter registered successfully"));
+    return res.status(201).json(new ApiResponse(201, company, "Recruiter registered successfully"));
   }
 
-  
   return res.status(201).json(new ApiResponse(201, createdUser, "User registered successfully"));
 });
 
@@ -172,6 +168,18 @@ const logoutUser = asyncHandler(async (req, res) => {
     )
 
 })
+
+const getUser = asyncHandler(async (req, res) => {
+  const { id: userId } = req.params;
+
+  const user = await User.findOne({ _id: userId });
+
+  if (!user) {
+    throw new ApiError(404, "user Not Found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, user, "User fetched successfully"));
+});
 
 //Get Current User
 const getCurrentUser = asyncHandler(async (req, res) => {
@@ -404,6 +412,7 @@ export {
   registerUser,
   loginUser,
   logoutUser,
+  getUser,
   getCurrentUser,
   deleteUser,
   updateUser,

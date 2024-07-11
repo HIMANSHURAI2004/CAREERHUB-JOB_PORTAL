@@ -108,7 +108,7 @@ export default function Header() {
                                 ) : (
                                     <Link
                                         to="/signup"
-                                        className={`rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 ${isActive('/signup') ? 'bg-gray-900' : ''}`}
+                                        className={`rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700 ${isActive('/signup') ? 'bg-gray-900' : ''}`}
                                     >
                                         Sign Up
                                     </Link>

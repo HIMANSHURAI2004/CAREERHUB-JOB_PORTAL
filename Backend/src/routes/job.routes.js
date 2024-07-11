@@ -1,6 +1,6 @@
 import {Router} from "express";
 import { verifyJWT } from "../middlewares/user.middleware.js";
-import { createJob, deleteJob, getCompanyDetails, getJob, getJobs, updateJob } from "../controllers/job.controller.js";
+import { createJob, deleteJob, getCompanyDetails, getCompanyDetailsById, getJob, getJobs, updateJob } from "../controllers/job.controller.js";
 
 const router = Router();
 
@@ -13,5 +13,6 @@ router.route("/update-job/:id").patch(verifyJWT,updateJob)
 router.route("/delete-job/:id").delete(verifyJWT,deleteJob)
 
 router.route("/get-company-details").get(verifyJWT,getCompanyDetails)
+router.route("/get-company-details-by-id/:id").get(getCompanyDetailsById)
 
 export default router
