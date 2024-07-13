@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../pages/career-hub-logo-white.png';
 
 export default function Header() {
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState(null);
     const location = useLocation();
@@ -23,11 +24,9 @@ export default function Header() {
                     const userData = await response.json();
                     setIsLoggedIn(true);
                     setUserData(userData);
-                    console.log('User data:', userData);
                 } else {
                     setIsLoggedIn(false);
                     setUserData(null);
-                    console.log('User is not logged in');
                 }
             } catch (error) {
                 setIsLoggedIn(false);
@@ -52,7 +51,6 @@ export default function Header() {
             if (response.ok) {
                 setIsLoggedIn(false);
                 setUserData(null);
-                console.log('User logged out successfully');
                 navigate('/login')
             } else {
                 console.error('Failed to logout:', response.statusText);

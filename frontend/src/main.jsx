@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import AddResume from './pages/AddResume';
 import PostJob from './pages/PostJob';
 import JobDetails from './pages/JobDetails';
+import AdminDashboard from './pages/AdminDashboard';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,7 +18,8 @@ const router = createBrowserRouter(
         <Route path='' element={<Home />} />
         <Route path='add-resume' element={<AddResume />} />
         <Route path='post-job' element={<PostJob />} />
-        <Route path="job/:id" element={<JobDetails />} />
+        <Route path='job/:id' element={<JobDetails />} />
+        <Route path='admin-dashboard' element={<AdminDashboard />} />
       </Route>
       <Route path='/signup' element={<SignUp />} />
       <Route path='/login' element={<Login />} />

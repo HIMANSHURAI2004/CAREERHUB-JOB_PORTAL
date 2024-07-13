@@ -7,6 +7,7 @@ import { options } from "../constants.js";
 import Company from "../models/company.model.js";
 import Job from "../models/job.model.js";
 import { Resume } from "../models/resume.model.js";
+import Application from "../models/application.model.js";
 
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -130,6 +131,11 @@ const loginUser = asyncHandler(async (req, res) => {
     " -password -refreshToken"
   )
 
+  const options = {
+    httpOnly: true,
+    secure: true
+}
+
   return res
     .status(200)
     .cookie("accessToken", accessToken, options)
@@ -169,6 +175,55 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 })
 
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+
+  if (!incomingRefreshToken) {
+      throw new ApiError(401, "unauthorized request")
+  }
+
+  try {
+      const decodedToken = jwt.verify(
+          incomingRefreshToken,
+          process.env.REFRESH_TOKEN_SECRET
+      )
+  
+      const user = await User.findById(decodedToken?._id)
+  
+      if (!user) {
+          throw new ApiError(401, "Invalid refresh token")
+      }
+  
+      if (incomingRefreshToken !== user?.refreshToken) {
+          throw new ApiError(401, "Refresh token is expired or used")
+          
+      }
+  
+      const options = {
+          httpOnly: true,
+          secure: true
+      }
+  
+      const {accessToken, newRefreshToken} = await generateAccessAndRefreshToken(user._id)
+  
+      return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", newRefreshToken, options)
+      .json(
+          new ApiResponse(
+              200, 
+              {accessToken, refreshToken: newRefreshToken},
+              "Access token refreshed"
+          )
+      )
+  } catch (error) {
+      throw new ApiError(401, error?.message || "Invalid refresh token")
+  }
+
+})
+
+
 const getUser = asyncHandler(async (req, res) => {
   const { id: userId } = req.params;
 
@@ -194,7 +249,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 const changeCurrentPassword = asyncHandler(async (req,res) =>{
   const {oldPassword,newPassword}= req.body;
 
-  const user=await User.findById(req.user?._id);
+  const user = await User.findById(req.user?._id);
   const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
 
   if(!isPasswordCorrect)
@@ -408,10 +463,115 @@ const deleteResume = asyncHandler(async (req, res) => {
 });
 
 
+const getAllEntriesOfModel = asyncHandler(async (req, res) => {
+  const { modelName, search, filters } = req.body;
+
+  let Model;
+  switch (modelName.toLowerCase()) {
+    case 'users':
+      Model = User;
+      break;
+    case 'companies':
+      Model = Company;
+      break;
+    case 'jobs':
+      Model = Job;
+      break;
+    case 'resumes':
+      Model = Resume;
+      break;
+    case 'applications':
+      Model = Application;
+      break;
+    default:
+      throw new ApiError(400, 'Invalid model name');
+  }
+
+  let query = {};
+  if (search || filters) {
+    switch (modelName.toLowerCase()) {
+      case 'users':
+        query = {
+          $or: [
+            { userName: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } },
+          ],
+        };
+        if (filters && filters.role) {
+          query.role = filters.role;
+        }
+        break;
+      case 'companies':
+        query = {
+          $or: [
+            { companyName: { $regex: search, $options: 'i' } },
+            { address: { $regex: search, $options: 'i' } },
+          ],
+        };
+        break;
+      case 'jobs':
+        query = {
+          $or: [
+            { locations: { $elemMatch: { $regex: search, $options: 'i' } } },
+            { title: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } },
+            { skillsRequired: { $elemMatch: { $regex: search, $options: 'i' } } },
+            { industry: { $regex: search, $options: 'i' } },
+          ],
+        };
+        if (filters && filters.salaryMin  && filters.salaryMax ) {
+          query.salary = { $gte: filters.salaryMin, $lte: filters.salaryMax };
+        }
+        if (filters && filters.workExperienceMinYears) {
+          query.workExperienceMinYears = { $gte: filters.workExperienceMinYears };
+        }
+        if (filters && filters.isRemote ) {
+          query.isRemote = filters.isRemote;
+        }
+        if (filters && filters.employmentType) {
+          query.employmentType = filters.employmentType;
+        }
+        break;
+      case 'resumes':
+        query = {
+          $or: [
+            { 'personalDetails.fullName': { $regex: search, $options: 'i' } },
+            { 'personalDetails.email': { $regex: search, $options: 'i' } },
+            { 'personalDetails.phone': { $regex: search, $options: 'i' } },
+            { 'personalDetails.linkedin': { $regex: search, $options: 'i' } },
+            { 'personalDetails.github': { $regex: search, $options: 'i' } },
+            { skills: { $elemMatch: { $regex: search, $options: 'i' } } },
+          ],
+        };
+        break;
+        case 'applications':
+          query = {
+            $or: [
+              { status: { $regex: search, $options: 'i' } },
+            ],
+          };
+          if (filters && filters.status) {
+            query.status = filters.status;
+          }
+          break;
+      default:
+        throw new ApiError(400, 'Invalid model name');
+    }
+  }
+
+  const entries = await Model.find(query).exec();
+  res.status(200).json({ data: entries });
+});
+
+
+
+
+
 export {
   registerUser,
   loginUser,
   logoutUser,
+  refreshAccessToken,
   getUser,
   getCurrentUser,
   deleteUser,
@@ -423,4 +583,5 @@ export {
   getResumeDetails,
   updateResume,
   deleteResume,
+  getAllEntriesOfModel,
 };
