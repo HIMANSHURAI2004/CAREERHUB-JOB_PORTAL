@@ -23,6 +23,7 @@ import {
     MenubarTrigger,
 } from "@/components/ui/menubar"
 export default function Header() {
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState(null);
     const location = useLocation();
@@ -47,7 +48,6 @@ export default function Header() {
                 } else {
                     setIsLoggedIn(false);
                     setUserData(null);
-                    console.log('User is not logged in');
                 }
             } catch (error) {
                 setIsLoggedIn(false);
@@ -72,7 +72,6 @@ export default function Header() {
             if (response.ok) {
                 setIsLoggedIn(false);
                 setUserData(null);
-                console.log('User logged out successfully');
                 navigate('/login')
             } else {
                 console.error('Failed to logout:', response.statusText);
@@ -122,7 +121,7 @@ export default function Header() {
                                 ) : (
                                     <Link
                                         to="/signup"
-                                        className={`rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 ${isActive('/signup') ? 'bg-gray-900' : ''}`}
+                                        className={`rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700 ${isActive('/signup') ? 'bg-gray-900' : ''}`}
                                     >
                                         Sign Up
                                     </Link>

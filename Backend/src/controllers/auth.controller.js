@@ -7,6 +7,7 @@ import { options } from "../constants.js";
 import Company from "../models/company.model.js";
 import Job from "../models/job.model.js";
 import { Resume } from "../models/resume.model.js";
+import Application from "../models/application.model.js";
 
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -29,7 +30,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 
 //Register User
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, password, userName, contactNo,role } = req.body;
+  const { email, password, userName, contactNo, role } = req.body;
 
   if ([email, password, userName, contactNo].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
@@ -41,8 +42,26 @@ const registerUser = asyncHandler(async (req, res) => {
   if (existingUser) {
     throw new ApiError(409, "User with entered email already exists");
   }
+
+  if (role === "recruiter") {
+    const { companyName, address} = req.body;
+
+    if (!companyName || !address) {
+      throw new ApiError(400, "Company Name and Address are required");
+    }
+
+    const userExist = await Company.findOne({ recruiter: existingUser?._id });
+    if (userExist) {
+      throw new ApiError(409, "Recruiter already owns a company");
+    }
+    const companyExist = await Company.findOne({ companyName });
+    if (companyExist) {
+      throw new ApiError(409, "Company Already Exists");
+    }
+  }
+
+  // Now create the user
   const imageLocalPath = req.files?.image?.[0]?.path;
-  console.log(imageLocalPath);
   let image;
   if (imageLocalPath) {
     image = await uploadOnCloudinary(imageLocalPath);
@@ -63,45 +82,23 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
 
-  if(role === "recruiter")
-  {
-    const {companyName , address , website} = req.body;
-
-    if(!companyName && !address)
-    {
-      throw new ApiError(401,"Company Name and Address are required");
-    }
-
-    
-    const userExist = await Company.findOne({recruiter: createdUser._id});
-    if(userExist)
-      {
-        throw new ApiError(401,"Recruiter already owns a company");
-      }
-      
-    const companyExist = await Company.findOne({companyName});
-    if(companyExist)
-    {
-      throw new ApiError(401,"Company Already Exists");
-    }
+  if (role === "recruiter") {
+    const { companyName, address, website } = req.body;
 
     const company = await Company.create({
       companyName,
       address,
-      website: website ? website : "",
-      recruiter:createdUser._id
-    
-    })
+      website: website || "",
+      recruiter: createdUser._id,
+    });
 
-    if(!company)
-    {
-      throw new ApiError(500,"Something went wrong while creating company")
+    if (!company) {
+      throw new ApiError(500, "Something went wrong while creating company");
     }
 
-    return res.status(201).json(new ApiResponse(201,company, "Recruiter registered successfully"));
+    return res.status(201).json(new ApiResponse(201, company, "Recruiter registered successfully"));
   }
 
-  
   return res.status(201).json(new ApiResponse(201, createdUser, "User registered successfully"));
 });
 
@@ -134,6 +131,11 @@ const loginUser = asyncHandler(async (req, res) => {
   const loggedInUser = await User.findById(user._id).select(
     " -password -refreshToken"
   )
+
+  const options = {
+    httpOnly: true,
+    secure: true
+}
 
   return res
     .status(200)
@@ -174,6 +176,67 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 })
 
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+
+  if (!incomingRefreshToken) {
+      throw new ApiError(401, "unauthorized request")
+  }
+
+  try {
+      const decodedToken = jwt.verify(
+          incomingRefreshToken,
+          process.env.REFRESH_TOKEN_SECRET
+      )
+  
+      const user = await User.findById(decodedToken?._id)
+  
+      if (!user) {
+          throw new ApiError(401, "Invalid refresh token")
+      }
+  
+      if (incomingRefreshToken !== user?.refreshToken) {
+          throw new ApiError(401, "Refresh token is expired or used")
+          
+      }
+  
+      const options = {
+          httpOnly: true,
+          secure: true
+      }
+  
+      const {accessToken, newRefreshToken} = await generateAccessAndRefreshToken(user._id)
+  
+      return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", newRefreshToken, options)
+      .json(
+          new ApiResponse(
+              200, 
+              {accessToken, refreshToken: newRefreshToken},
+              "Access token refreshed"
+          )
+      )
+  } catch (error) {
+      throw new ApiError(401, error?.message || "Invalid refresh token")
+  }
+
+})
+
+
+const getUser = asyncHandler(async (req, res) => {
+  const { id: userId } = req.params;
+
+  const user = await User.findOne({ _id: userId });
+
+  if (!user) {
+    throw new ApiError(404, "user Not Found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, user, "User fetched successfully"));
+});
+
 //Get Current User
 const getCurrentUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user?._id).populate("resume");
@@ -188,7 +251,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 const changeCurrentPassword = asyncHandler(async (req,res) =>{
   const {oldPassword,newPassword}= req.body;
 
-  const user=await User.findById(req.user?._id);
+  const user = await User.findById(req.user?._id);
   const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
 
   if(!isPasswordCorrect)
@@ -403,10 +466,116 @@ const deleteResume = asyncHandler(async (req, res) => {
 });
 
 
+const getAllEntriesOfModel = asyncHandler(async (req, res) => {
+  const { modelName, search, filters } = req.body;
+
+  let Model;
+  switch (modelName.toLowerCase()) {
+    case 'users':
+      Model = User;
+      break;
+    case 'companies':
+      Model = Company;
+      break;
+    case 'jobs':
+      Model = Job;
+      break;
+    case 'resumes':
+      Model = Resume;
+      break;
+    case 'applications':
+      Model = Application;
+      break;
+    default:
+      throw new ApiError(400, 'Invalid model name');
+  }
+
+  let query = {};
+  if (search || filters) {
+    switch (modelName.toLowerCase()) {
+      case 'users':
+        query = {
+          $or: [
+            { userName: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } },
+          ],
+        };
+        if (filters && filters.role) {
+          query.role = filters.role;
+        }
+        break;
+      case 'companies':
+        query = {
+          $or: [
+            { companyName: { $regex: search, $options: 'i' } },
+            { address: { $regex: search, $options: 'i' } },
+          ],
+        };
+        break;
+      case 'jobs':
+        query = {
+          $or: [
+            { locations: { $elemMatch: { $regex: search, $options: 'i' } } },
+            { title: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } },
+            { skillsRequired: { $elemMatch: { $regex: search, $options: 'i' } } },
+            { industry: { $regex: search, $options: 'i' } },
+          ],
+        };
+        if (filters && filters.salaryMin  && filters.salaryMax ) {
+          query.salary = { $gte: filters.salaryMin, $lte: filters.salaryMax };
+        }
+        if (filters && filters.workExperienceMinYears) {
+          query.workExperienceMinYears = { $gte: filters.workExperienceMinYears };
+        }
+        if (filters && filters.isRemote ) {
+          query.isRemote = filters.isRemote;
+        }
+        if (filters && filters.employmentType) {
+          query.employmentType = filters.employmentType;
+        }
+        break;
+      case 'resumes':
+        query = {
+          $or: [
+            { 'personalDetails.fullName': { $regex: search, $options: 'i' } },
+            { 'personalDetails.email': { $regex: search, $options: 'i' } },
+            { 'personalDetails.phone': { $regex: search, $options: 'i' } },
+            { 'personalDetails.linkedin': { $regex: search, $options: 'i' } },
+            { 'personalDetails.github': { $regex: search, $options: 'i' } },
+            { skills: { $elemMatch: { $regex: search, $options: 'i' } } },
+          ],
+        };
+        break;
+        case 'applications':
+          query = {
+            $or: [
+              { status: { $regex: search, $options: 'i' } },
+            ],
+          };
+          if (filters && filters.status) {
+            query.status = filters.status;
+          }
+          break;
+      default:
+        throw new ApiError(400, 'Invalid model name');
+    }
+  }
+
+  const entries = await Model.find(query).exec();
+  res.status(200).json({ data: entries });
+});
+
+
+
+
+
 export {
   registerUser,
   loginUser,
   logoutUser,
+  refreshAccessToken,
+  getUser,
   getCurrentUser,
   deleteUser,
   updateUser,
@@ -417,4 +586,5 @@ export {
   getResumeDetails,
   updateResume,
   deleteResume,
+  getAllEntriesOfModel,
 };

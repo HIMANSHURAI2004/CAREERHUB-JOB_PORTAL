@@ -43,12 +43,17 @@ function Login() {
             const response = await axios.post('http://localhost:3000/api/v1/user/login', formData, {
                 withCredentials: true,
             });
-            console.log(response);
 
-            if (!response.data.success) {
+            console.log(response)
+            
+            if (response.data.statusCode >= 400) {
                 throw new Error(response.data?.message || 'Failed to Login');
             }
-            navigate('/');
+            if (response.data.data.user.role === "admin"){
+                navigate('/admin-dashboard')
+            }else {
+                navigate('/');
+            }
         } catch (error) {
             setErrorMessage(error.response.data.message || 'Failed to Login');
         } finally {
