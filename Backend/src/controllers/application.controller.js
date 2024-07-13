@@ -7,7 +7,10 @@ import { ApiError } from "../utils/ApiError.js";
 const createApplication = asyncHandler(async (req, res) => {
   const { id: jobId } = req.params; 
   const applicant = req.user._id;
-
+  // console.log(req.user.resume)
+  if(!req.user.resume){
+    throw new ApiError(400, "Please upload your resume before applying for a job");
+  }
   console.log(jobId,applicant)
 
   const job = await Job.findById(jobId);
@@ -21,6 +24,9 @@ const createApplication = asyncHandler(async (req, res) => {
   }
 
   const application = await Application.create({ job: jobId, applicant });
+  if(!application){
+    throw new ApiError(400,'Application failed')
+  }
 
   return res.status(201).json(new ApiResponse(201, application, "Application created successfully"));
 });
@@ -38,13 +44,14 @@ const getAllApplicationsForJob = asyncHandler(async (req, res) => {
     if (applications.length === 0) {
       return res.status(200).json(new ApiResponse(200, [], "No applications found for this job"));
     }
-  
+    
     return res.status(200).json(new ApiResponse(200, applications, "Applications for job fetched successfully"));
   });
 
 const getUserApplications = asyncHandler(async (req, res) => {
   const applications = await Application.find({ applicant: req.user._id }).populate("job").select("-__v");
-
+  // applications = applications.job.company;
+  console.log(applications.job);
   if (applications.length === 0) {
     return res.status(200).json(new ApiResponse(200, [], "No applications found for this user"));
   }

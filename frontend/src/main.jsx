@@ -11,6 +11,9 @@ import PostJob from './pages/PostJob';
 import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
 import Resume from './components/Resume';
+import Account from './components/Account';
+import Applications from './components/Applications';
+import { Toaster } from "@/components/ui/toaster"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -20,6 +23,8 @@ const router = createBrowserRouter(
         <Route path='post-job' element={<PostJob />} />
         <Route path='profile' element={<Profile />} />
         <Route path="resume" element={<Resume />} />
+        <Route path="account" element={<Account />} />
+        <Route path="applications" element={<Applications />} />
       </Route>
       <Route path='/signup' element={<SignUp />} />
       <Route path='/login' element={<Login />} />
@@ -31,6 +36,7 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RouterProvider router={router} />
+    <Toaster />
   </React.StrictMode>
 );
 

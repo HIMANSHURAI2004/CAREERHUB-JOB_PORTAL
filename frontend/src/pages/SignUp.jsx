@@ -65,7 +65,7 @@ function SignUp() {
         for (const key in formData) {
             formDataToSend.append(key, formData[key]);
         }
-        console.log(formDataToSend);
+        // console.log(formDataToSend);
         try {
             const response = await fetch('http://localhost:3000/api/v1/user/register', {
                 method: 'POST',
@@ -79,10 +79,7 @@ function SignUp() {
 
             navigate('/login');
             const responseData = await response.json();
-            // Handle success, redirect user or show success message
-            // console.log(responseData);
         } catch (error) {
-            // Handle error, show error message
             setErrorMessage(error.message || 'Failed to register user');
         }
     };

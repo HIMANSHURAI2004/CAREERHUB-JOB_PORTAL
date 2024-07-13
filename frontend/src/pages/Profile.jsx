@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import profile from './profile.jpg'
+
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
@@ -57,10 +59,14 @@ function Profile() {
     e.preventDefault();
     const formData = new FormData();
     formData["image"] = image;
+    // console.log(formData);
     try {
       const response = await fetch("http://localhost:3000/api/v1/user/update-image", {
-        method: "PATCH",
-        credentials: "include",
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
         body: formData,
       });
       setUserData({ ...userData, image: response.data.image });
@@ -97,8 +103,8 @@ function Profile() {
               General
             </Link>
             <Link to="/resume">Resume</Link>
-            <Link to="#">Account</Link>
-            <Link to="#">Applications</Link>
+            <Link to="/account">Account</Link>
+            <Link to="/applications">Applications</Link>
           </nav>
           <div className="grid gap-6">
             <Card className="border rounded-lg shadow-lg p-6">
@@ -111,9 +117,9 @@ function Profile() {
                 <div className="md:flex-shrink-0">
                   {userData && (
                     <img
-                      src={userData.image || "https://via.placeholder.com/150"}
+                      src={userData.image === "" ? profile : userData.image}
                       alt="User Profile"
-                      className="w-32 h-32 rounded-full mx-auto md:mx-0"
+                      className="w-36 h-36 rounded-full mx-auto md:mx-0"
                     />
                   )}
                 </div>
@@ -144,7 +150,7 @@ function Profile() {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button className="bg-blue-600 text-white py-2 px-4 rounded-lg">
-                      Change Image
+                      {image ? "Change Image" : "Upload Image"}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">

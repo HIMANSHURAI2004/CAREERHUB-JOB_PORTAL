@@ -45,10 +45,9 @@ function Login() {
             });
             console.log(response);
 
-            if (response.data.statusCode >= 400) {
+            if (!response.data.success) {
                 throw new Error(response.data?.message || 'Failed to Login');
             }
-
             navigate('/');
         } catch (error) {
             setErrorMessage(error.response.data.message || 'Failed to Login');

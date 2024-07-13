@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
+import { useNavigate } from 'react-router-dom';
 const PostJob = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -13,6 +16,8 @@ const PostJob = () => {
     employmentType: 'Full-time',
     industry: '',
   });
+  const { toast } = useToast()
+  
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -56,11 +61,24 @@ const PostJob = () => {
       });
       if (!response.ok) {
         const errorData = await response.json();
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "Failed to post job, Please try again.",
+          // action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
         throw new Error(errorData.message || 'Failed to add job');
       }
+      else {
+        toast({
+            description: "Job Posted Successfully",
+          })
+          navigate("/")
+    }
 
       const responseData = await response.json();
       console.log(responseData);
+
     } catch (error) {
       setErrorMessage(error.message || 'Failed to add job');
     }
