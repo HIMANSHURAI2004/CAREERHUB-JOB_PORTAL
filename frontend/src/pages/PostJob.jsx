@@ -69,10 +69,10 @@ const PostJob = () => {
   return (
     <div className="bg-gray-100 py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
-        <h2 className="text-2xl font-bold text-gray-800 py-4 px-6 bg-gray-200">Post a Job</h2>
+        <h2 className="text-2xl font-bold text-white py-4 px-6 text-center bg-blue-600">Post Job</h2>
         <form onSubmit={handleSubmit} className="p-6">
           <div className="mb-4">
-            <label htmlFor="title" className="block text-gray-700 font-bold mb-2">
+            <label htmlFor="title" className="block text-gray-700 font-semibold mb-2">
               Job Title
             </label>
             <input
@@ -86,7 +86,7 @@ const PostJob = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="description" className="block text-gray-700 font-bold mb-2">
+            <label htmlFor="description" className="block text-gray-700 font-semibold mb-2">
               Description
             </label>
             <textarea
@@ -99,8 +99,8 @@ const PostJob = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="locations" className="block text-gray-700 font-bold mb-2">
-              Locations (comma-separated)
+            <label htmlFor="locations" className="block text-gray-700 font-semibold mb-2">
+              Locations <span className='text-gray-500 font-normal text-sm'>(eg - Banglore,Pune,etc)</span>
             </label>
             <input
               type="text"
@@ -113,7 +113,7 @@ const PostJob = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="salary" className="block text-gray-700 font-bold mb-2">
+            <label htmlFor="salary" className="block text-gray-700 font-semibold mb-2">
               Salary
             </label>
             <input
@@ -126,7 +126,7 @@ const PostJob = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="deadline" className="block text-gray-700 font-bold mb-2">
+            <label htmlFor="deadline" className="block text-gray-700 font-semibold mb-2">
               Deadline
             </label>
             <input
@@ -139,7 +139,7 @@ const PostJob = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="workExperienceMinYears" className="block text-gray-700 font-bold mb-2">
+            <label htmlFor="workExperienceMinYears" className="block text-gray-700 font-semibold mb-2">
               Minimum Years of Work Experience
             </label>
             <input
@@ -152,7 +152,7 @@ const PostJob = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="flex items-center text-gray-700 font-bold">
+            <label className="flex items-center text-gray-700 font-semibold">
               <input
                 type="checkbox"
                 id="isRemote"
@@ -165,8 +165,8 @@ const PostJob = () => {
             </label>
           </div>
           <div className="mb-4">
-            <label htmlFor="skillsRequired" className="block text-gray-700 font-bold mb-2">
-              Skills Required (comma-separated)
+            <label htmlFor="skillsRequired" className="block text-gray-700 font-semibold mb-2">
+              Skills Required <span className='text-gray-500 font-normal text-sm'>(eg - Python,React,etc)</span>
             </label>
             <input
               type="text"
@@ -178,7 +178,7 @@ const PostJob = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="employmentType" className="block text-gray-700 font-bold mb-2">
+            <label htmlFor="employmentType" className="block text-gray-700 font-semibold mb-2">
               Employment Type
             </label>
             <select
@@ -195,7 +195,7 @@ const PostJob = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label htmlFor="industry" className="block text-gray-700 font-bold mb-2">
+            <label htmlFor="industry" className="block text-gray-700 font-semibold mb-2">
               Industry
             </label>
             <input
@@ -209,7 +209,7 @@ const PostJob = () => {
           </div>
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Post Job
           </button>

@@ -24,7 +24,12 @@ router.route("/change-password").patch(verifyJWT,changeCurrentPassword);
 
 router.route("/update-user").patch(verifyJWT,updateUser);
 router.route("/update-company-details").patch(verifyJWT,updateCompanyDetails);
-router.route("/update-image").patch(verifyJWT,upload.single("image"),updateImage);
+router.route("/update-image").patch(verifyJWT,upload.fields([
+    {
+        name : "image",//name should be same as frontend
+        maxCount : 1,
+    }
+]),updateImage);
 router.route("/delete-user").delete(verifyJWT , deleteUser);
 
 

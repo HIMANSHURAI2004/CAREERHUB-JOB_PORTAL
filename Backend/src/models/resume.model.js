@@ -17,7 +17,7 @@ const resumeSchema = new Schema({
             jobTitle: { type: String },
             company: { type: String },
             location: String,
-            startDate: { type: Date },
+            startDate: Date,
             endDate: Date,
             responsibilities: String
         }

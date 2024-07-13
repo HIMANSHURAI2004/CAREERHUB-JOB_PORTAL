@@ -175,10 +175,11 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 //Get Current User
 const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id).populate("resume");
   return res
     .status(200)
     .json(
-      new ApiResponse(200, req.user, "Current user fetched successfully")
+      new ApiResponse(200,user, "Current user fetched successfully")
     )
 })
 
@@ -236,8 +237,9 @@ const updateUser = asyncHandler(async (req, res) => {
 
 //Update image
 const updateImage = asyncHandler(async (req, res) => {
-  const imageLocalPath = req.file?.path;
-  console.log(imageLocalPath)
+  // const imageLocalPath = req.file?.path;
+  const imageLocalPath = req.files?.image?.[0]?.path;
+  // console.log(imageLocalPath)
 
   if (!imageLocalPath) {
     throw new ApiError(400, "image file is missing")
@@ -348,7 +350,7 @@ const addResume = asyncHandler(async (req, res) => {
 });
 
 const getResumeDetails = asyncHandler(async (req, res) => {
-  const resume = await Resume.findById(req.user.resume);
+  const resume = await Resume.findById(req.user.resume).select("-__v  -_id -createdAt -updatedAt");
 
   if (!resume) {
     throw new ApiError(404, "Resume not found");
@@ -359,8 +361,8 @@ const getResumeDetails = asyncHandler(async (req, res) => {
 
 //Update Resume
 const updateResume = asyncHandler(async (req, res) => {
-    const { fullName, email, phone, linkedin, github, skills, workExperience, education, projects } = req.body;
-
+    const { personalDetails, skills, workExperience, education, projects } = req.body;
+    const { fullName, email, phone, linkedin, github } = personalDetails;
     if(!(fullName && email && phone && linkedin && github && skills && workExperience && education && projects))
     {
         throw new ApiError(400,"Atleast One field is required");

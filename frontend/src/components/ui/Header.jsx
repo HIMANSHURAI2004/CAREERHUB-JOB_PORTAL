@@ -1,7 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../pages/career-hub-logo-white.png';
-
+import profile from './profile.jpg'
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar"
+import {
+    Menubar,
+    MenubarCheckboxItem,
+    MenubarContent,
+    MenubarItem,
+    MenubarMenu,
+    MenubarRadioGroup,
+    MenubarRadioItem,
+    MenubarSeparator,
+    MenubarShortcut,
+    MenubarSub,
+    MenubarSubContent,
+    MenubarSubTrigger,
+    MenubarTrigger,
+} from "@/components/ui/menubar"
 export default function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState(null);
@@ -23,7 +43,7 @@ export default function Header() {
                     const userData = await response.json();
                     setIsLoggedIn(true);
                     setUserData(userData);
-                    console.log('User data:', userData);
+                    // console.log('User data:', userData);
                 } else {
                     setIsLoggedIn(false);
                     setUserData(null);
@@ -98,12 +118,6 @@ export default function Header() {
                                                 Add Resume
                                             </Link>
                                         )}
-                                        <button
-                                            onClick={handleLogout}
-                                            className="rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
-                                        >
-                                            Logout
-                                        </button>
                                     </>
                                 ) : (
                                     <Link
@@ -118,20 +132,38 @@ export default function Header() {
                     </div>
                     {isLoggedIn && userData && (
                         <div className="relative ml-3">
-                            <button
-                                type="button"
-                                className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                                id="user-menu-button"
-                                aria-expanded="false"
-                                aria-haspopup="true"
-                            >
-                                <span className="sr-only">Open user menu</span>
-                                <img
-                                    className="h-8 w-8 rounded-full"
-                                    src={userData.image}
-                                    alt={userData.userName}
-                                />
-                            </button>
+                            <Menubar className='border-none outline-none bg-blue-600 focus:'>
+                                <MenubarMenu className=''>
+                                    <MenubarTrigger className='w-full'>
+                                        <Avatar>
+                                            <AvatarImage src={userData.image || profile} alt={userData.userName}/>
+                                            <AvatarFallback>CN</AvatarFallback>
+                                        </Avatar>
+                                        {/* <span className="sr-only">Open user menu</span>
+                                        <img
+                                            className="h-8 w-8 rounded-full"
+                                            src={userData.image || profile}
+                                            alt={userData.userName}
+                                        /> */}
+                                    </MenubarTrigger>
+                                    <MenubarContent className='w-[10%]'>
+                                        <Link to='/profile'>
+                                            <MenubarItem className>
+                                                View Profile
+                                            </MenubarItem>
+                                        </Link>
+
+                                        {
+                                            isLoggedIn && (
+                                                <MenubarItem onClick={handleLogout}>
+                                                    Logout
+                                                </MenubarItem>
+
+                                            )
+                                        }
+                                    </MenubarContent>
+                                </MenubarMenu>
+                            </Menubar>
                         </div>
                     )}
                 </div>

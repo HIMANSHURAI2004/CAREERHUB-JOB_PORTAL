@@ -8,7 +8,9 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import AddResume from './pages/AddResume';
 import PostJob from './pages/PostJob';
-
+import Profile from './pages/Profile';
+import Dashboard from './pages/Dashboard';
+import Resume from './components/Resume';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -16,9 +18,12 @@ const router = createBrowserRouter(
         <Route path='' element={<Home />} />
         <Route path='add-resume' element={<AddResume />} />
         <Route path='post-job' element={<PostJob />} />
+        <Route path='profile' element={<Profile />} />
+        <Route path="resume" element={<Resume />} />
       </Route>
       <Route path='/signup' element={<SignUp />} />
       <Route path='/login' element={<Login />} />
+      <Route path='/admin/dashboard' element={<Dashboard/>} />
     </>
   )
 );
