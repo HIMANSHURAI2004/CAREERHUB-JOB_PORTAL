@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken} from "../controllers/auth.controller.js"
+import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken, deleteEntry, countEntriesOfModel} from "../controllers/auth.controller.js"
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/user.middleware.js";
 
@@ -41,7 +41,10 @@ router.route("/add-resume").post(verifyJWT,addResume);
 router.route("/get-resume").get(verifyJWT,getResumeDetails);
 router.route("/update-resume").patch(verifyJWT,updateResume);
 router.route("/delete-resume").delete(verifyJWT,deleteResume);
+
 router.route("/admin-dashboard").post(verifyJWT,getAllEntriesOfModel)
+router.route("/count-entries").post(verifyJWT,countEntriesOfModel)
+router.route("/admin-delete").delete(verifyJWT,deleteEntry)
 
 
 export default router

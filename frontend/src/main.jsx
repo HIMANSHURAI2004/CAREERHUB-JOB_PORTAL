@@ -16,6 +16,7 @@ import Applications from './components/Applications';
 import { Toaster } from "@/components/ui/toaster"
 import JobDetails from './pages/JobDetails';
 import AdminDashboard from './pages/AdminDashboard';
+import UserDashboard from './pages/UserDashboard';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
         <Route path="applications" element={<Applications />} />
         <Route path='job/:id' element={<JobDetails />} />
         <Route path='admin-dashboard' element={<AdminDashboard />} />
+        <Route path='user-dashboard' element={<UserDashboard />} />
       </Route>
       <Route path='/signup' element={<SignUp />} />
       <Route path='/login' element={<Login />} />

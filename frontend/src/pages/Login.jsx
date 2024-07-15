@@ -52,7 +52,7 @@ function Login() {
             if (response.data.data.user.role === "admin"){
                 navigate('/admin-dashboard')
             }else {
-                navigate('/');
+                navigate('/user-dashboard');
             }
         } catch (error) {
             setErrorMessage(error.response.data.message || 'Failed to Login');
