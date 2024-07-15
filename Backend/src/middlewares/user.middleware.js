@@ -23,15 +23,15 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
         if (!user) {
             throw new ApiError(401, "Invalid access token");
         }
-        if(user.role === "recruiter")
-        {
-            const company = await Company.findOne({recruiter: user._id});
-            if(!company)
-            {
-                throw new ApiError(401,"Company Does Not Exist !!")
-            }
-            req.company = company;
-        }
+        // if(user.role === "recruiter")
+        // {
+        //     const company = await Company.findOne({recruiter: user._id});
+        //     if(!company)
+        //     {
+        //         throw new ApiError(401,"Company Does Not Exist !!")
+        //     }
+        //     req.company = company;
+        // }
         
         req.user = user;
         next();
