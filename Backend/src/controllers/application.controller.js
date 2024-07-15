@@ -13,7 +13,7 @@ const createApplication = asyncHandler(async (req, res) => {
   //   throw new ApiError(400, "Please upload your resume before applying for a job");
   // }
 
-  console.log(jobId,applicant)
+  // console.log(jobId,applicant)
 
   const job = await Job.findById(jobId);
   if (!job) {
@@ -81,7 +81,7 @@ const getAllApplicationsForJob = asyncHandler(async (req, res) => {
 
 const getUserApplications = asyncHandler(async (req, res) => {
   const applications = await Application.find({ applicant: req.user._id }).populate("job").select("-__v");
-  console.log(applications.job);
+  // console.log(applications.job);
   if (applications.length === 0) {
     return res.status(200).json(new ApiResponse(200, [], "No applications found for this user"));
   }

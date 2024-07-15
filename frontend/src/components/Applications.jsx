@@ -134,29 +134,34 @@ function Applications() {
                                                 <p><strong>Locations:</strong> {application.job.locations.join(', ')}</p>
                                             </div>
                                         </CardContent>
-                                        <div className=" rounded-b-md flex justify-end items-center pr-5">
-                                            <Button className='bg-[#294f7c] hover:bg-[#073a7c] m-2 mr-6'>
+                                        <div className=" rounded-b-md flex justify-end items-center ">
+                                            <Button className='bg-[#294f7c] hover:bg-[#073a7c] m-2 mr-4'>
                                                 <Link to={`/job/${application.job._id}`} className="text-white hover:">View Job</Link>
                                             </Button>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger>
-                                                    <Button className='text-white bg-red-600 hover:bg-red-800'>Delete</Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle>Delete Application</AlertDialogTitle>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogDescription>
-                                                        Are you sure you want to delete your Application for this job? This action is not reversible.
-                                                    </AlertDialogDescription>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogAction className='bg-red-600 hover:bg-red-900'>
-                                                            <Button className='bg-red-600 hover:bg-red-900' onClick={() => handleDeleteApplication(application?._id)}>Delete</Button>
-                                                        </AlertDialogAction>
-                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
+                                            {
+                                                application.status !== 'Offered'  && (
+
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger>
+                                                        <Button className='text-white bg-red-600 hover:bg-red-800 mr-4'>Delete</Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>Delete Application</AlertDialogTitle>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogDescription>
+                                                            Are you sure you want to delete your Application for this job? This action is not reversible.
+                                                        </AlertDialogDescription>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogAction className='bg-red-600 hover:bg-red-900'>
+                                                                <Button className='bg-red-600 hover:bg-red-900' onClick={() => handleDeleteApplication(application?._id)}>Delete</Button>
+                                                            </AlertDialogAction>
+                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                                )
+                                            }
 
                                         </div>
                                     </Card>
