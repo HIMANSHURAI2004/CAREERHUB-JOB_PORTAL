@@ -33,13 +33,33 @@ import { Label } from "@/components/ui/label"
 import { useState } from "react";
 import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
-
+import { useEffect } from "react";
 function Account() {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
-
+    const [userRole, setUserRole] = useState(null);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const { toast } = useToast()
+
+    async function getUserData() {
+        try {
+            const response = await fetch("http://localhost:3000/api/v1/user/get-user", {
+                method: "GET",
+                credentials: "include",
+            });
+            const data = await response.json();
+            setUserRole(data?.data.role);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        getUserData();
+    }, []);
     const handleChangePassword = async (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -90,31 +110,47 @@ function Account() {
                     // action: <ToastAction altText="Try again">Try again</ToastAction>,
                 })
             }
-            else
-            {
+            else {
                 toast({
                     description: "Account deleted successfully .",
                 })
             }
             navigate('/login');
         } catch (error) {
-            console.error('Error deleting resume:', error);
+            console.error('Error deleting Account:', error);
         }
+    }
+
+    if (loading) {
+        return (
+            <div>Loading...</div>
+        )
     }
     return (
         <div className="flex min-h-screen w-full flex-col bg-gray-100">
-            <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
+            <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 ">
                 <div className="mx-auto grid w-full max-w-6xl gap-2">
-                    <h1 className="text-3xl font-semibold text-gray-700">Account</h1>
+                    <h1 className="text-3xl font-semibold text-gray-700 pb-2">Account</h1>
                 </div>
                 <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[250px_1fr] lg:grid-cols-[300px_1fr]">
                     <nav className="grid gap-4 text-sm text-gray-600">
-                        <Link to="/profile">
-                            General
-                        </Link>
-                        <Link to="/resume">Resume</Link>
-                        <Link to="/account" className="font-semibold text-blue-600">Account</Link>
-                        <Link to="/applications">Applications</Link>
+                        <nav className="grid gap-4 text-sm text-gray-600">
+                            <Link to="/profile">
+                                General
+                            </Link>
+                            {userRole === "recruiter" ? (
+                                <>
+                                    <Link to="/company">Company</Link>
+                                    <Link to="/user-job">Jobs</Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/resume">Resume</Link>
+                                    <Link to="/applications">Applications</Link>
+                                </>
+                            )}
+                            <Link to="/account" className="font-semibold text-blue-600">Account</Link>
+                        </nav>
                     </nav>
                     <div className="grid gap-6">
                         <Card className="border rounded-lg shadow-lg">
@@ -174,11 +210,6 @@ function Account() {
                             </CardContent>
                         </Card>
                         <Card className="border rounded-lg shadow-lg">
-                            {/* <CardHeader>
-                                <CardTitle className="text-2xl font-semibold text-red-500">
-                                    Delete Account
-                                </CardTitle>
-                            </CardHeader> */}
                             <CardContent >
                                 <h1 className="text-2xl font-semibold text-red-500 p-2 py-4">
                                     Delete Account

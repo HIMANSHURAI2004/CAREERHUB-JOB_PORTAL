@@ -16,6 +16,10 @@ import Applications from './components/Applications';
 import { Toaster } from "@/components/ui/toaster"
 import JobDetails from './pages/JobDetails';
 import AdminDashboard from './pages/AdminDashboard';
+import CompanyDetails from './components/CompanyDetails';
+import UserJobs from './components/UserJobs';
+import JobApplications from './pages/JobApplications';
+import UserResume from './pages/UserResume';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,8 +33,13 @@ const router = createBrowserRouter(
         <Route path="account" element={<Account />} />
         <Route path="applications" element={<Applications />} />
         <Route path='job/:id' element={<JobDetails />} />
+        <Route path='/company' element={<CompanyDetails />} />
+        <Route path='/user-job' element={<UserJobs />} />
+        <Route path='/job-applications/:id' element={<JobApplications/>} />
+        <Route path='/user-resume/:id' element={<UserResume/>} />
         <Route path='admin-dashboard' element={<AdminDashboard />} />
       </Route>
+      
       <Route path='/signup' element={<SignUp />} />
       <Route path='/login' element={<Login />} />
       <Route path='/admin/dashboard' element={<Dashboard/>} />

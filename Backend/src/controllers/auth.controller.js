@@ -44,7 +44,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   if (role === "recruiter") {
-    const { companyName, address} = req.body;
+    const { companyName, address } = req.body;
 
     if (!companyName || !address) {
       throw new ApiError(400, "Company Name and Address are required");
@@ -107,7 +107,7 @@ const registerUser = asyncHandler(async (req, res) => {
 //Login User
 const loginUser = asyncHandler(async (req, res) => {
 
-  const { email, password} = req.body
+  const { email, password } = req.body
 
   if (!email) {
     throw new ApiError(400, "Email is required")
@@ -135,7 +135,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true
-}
+  }
 
   return res
     .status(200)
@@ -180,46 +180,46 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
 
   if (!incomingRefreshToken) {
-      throw new ApiError(401, "unauthorized request")
+    throw new ApiError(401, "unauthorized request")
   }
 
   try {
-      const decodedToken = jwt.verify(
-          incomingRefreshToken,
-          process.env.REFRESH_TOKEN_SECRET
-      )
-  
-      const user = await User.findById(decodedToken?._id)
-  
-      if (!user) {
-          throw new ApiError(401, "Invalid refresh token")
-      }
-  
-      if (incomingRefreshToken !== user?.refreshToken) {
-          throw new ApiError(401, "Refresh token is expired or used")
-          
-      }
-  
-      const options = {
-          httpOnly: true,
-          secure: true
-      }
-  
-      const {accessToken, newRefreshToken} = await generateAccessAndRefreshToken(user._id)
-  
-      return res
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    )
+
+    const user = await User.findById(decodedToken?._id)
+
+    if (!user) {
+      throw new ApiError(401, "Invalid refresh token")
+    }
+
+    if (incomingRefreshToken !== user?.refreshToken) {
+      throw new ApiError(401, "Refresh token is expired or used")
+
+    }
+
+    const options = {
+      httpOnly: true,
+      secure: true
+    }
+
+    const { accessToken, newRefreshToken } = await generateAccessAndRefreshToken(user._id)
+
+    return res
       .status(200)
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", newRefreshToken, options)
       .json(
-          new ApiResponse(
-              200, 
-              {accessToken, refreshToken: newRefreshToken},
-              "Access token refreshed"
-          )
+        new ApiResponse(
+          200,
+          { accessToken, refreshToken: newRefreshToken },
+          "Access token refreshed"
+        )
       )
   } catch (error) {
-      throw new ApiError(401, error?.message || "Invalid refresh token")
+    throw new ApiError(401, error?.message || "Invalid refresh token")
   }
 
 })
@@ -239,32 +239,31 @@ const getUser = asyncHandler(async (req, res) => {
 
 //Get Current User
 const getCurrentUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user?._id).populate("resume");
+  const user = await User.findById(req.user?._id).populate("resume").select("-password");
   return res
     .status(200)
     .json(
-      new ApiResponse(200,user, "Current user fetched successfully")
+      new ApiResponse(200, user, "Current user fetched successfully")
     )
 })
 
 // Change Password
-const changeCurrentPassword = asyncHandler(async (req,res) =>{
-  const {oldPassword,newPassword}= req.body;
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
 
   const user = await User.findById(req.user?._id);
   const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
 
-  if(!isPasswordCorrect)
-  {
-      throw new ApiError(400,"Invalid user Password")
+  if (!isPasswordCorrect) {
+    throw new ApiError(400, "Invalid user Password")
   }
 
-  user.password=newPassword;
-  await user.save({validateBeforeSave:false})
+  user.password = newPassword;
+  await user.save({ validateBeforeSave: false })
 
   return res
-  .status(200)
-  .json(new ApiResponse(200,{},"Password change successfully"))
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password change successfully"))
 
 })
 
@@ -287,16 +286,16 @@ const updateUser = asyncHandler(async (req, res) => {
     {
       new: true
     }
-    
+
   ).select(
     "-password"
   )
-  
+
   return res
-  .status(200)
-  .json(
-    new ApiResponse(200, user, "User details updated successfully")
-  )
+    .status(200)
+    .json(
+      new ApiResponse(200, user, "User details updated successfully")
+    )
 })
 
 //Update image
@@ -310,11 +309,11 @@ const updateImage = asyncHandler(async (req, res) => {
   }
 
   const image = await uploadOnCloudinary(imageLocalPath)
-  
+
   if (!image.url) {
     throw new ApiError(400, "Error while uploading image")
   }
-  
+
   const user = await User.findByIdAndUpdate(
     req.user._id,
     {
@@ -328,13 +327,13 @@ const updateImage = asyncHandler(async (req, res) => {
   ).select(
     "-password"
   )
-  
+
   return res
-  .status(200)
-  .json(
-    new ApiResponse(200, user, "Image updated successfully")
-  )
-  
+    .status(200)
+    .json(
+      new ApiResponse(200, user, "Image updated successfully")
+    )
+
 })
 
 //Delete User
@@ -356,18 +355,28 @@ const deleteUser = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Something went wrong while deleting the jobs associated to this user");
     }
   }
-  
+
   return res.status(200).json(new ApiResponse(200, {}, "User deleted successfully"));
 });
 
 const updateCompanyDetails = asyncHandler(async (req, res) => {
   const { companyName, address, website } = req.body;
 
-  const company = await Company.findOne({ recruiter: req.user._id });
+
+
+  const company = await Company.findOne({ recruiter: req.user._id })
 
   if (!company) {
     throw new ApiError(404, "Company not found");
   }
+
+  if (company.companyName !== companyName) {
+    const companyExist = await Company.findOne({ companyName });
+    if (companyExist) {
+      throw new ApiError(409, "Company with this Name Already Exists");
+    }
+  }
+
 
   if (companyName) company.companyName = companyName;
   if (address) company.address = address;
@@ -400,7 +409,7 @@ const addResume = asyncHandler(async (req, res) => {
     education: education ? education : [],
     projects: projects ? projects : [],
   });
-  
+
   if (!resume) {
     throw new ApiError(500, "Something went wrong while adding resume");
   }
@@ -423,35 +432,44 @@ const getResumeDetails = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, resume, "Resume fetched successfully"));
 })
 
+const getResumeById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const resume = await Resume.findById(id).select("-__v  -_id -createdAt -updatedAt");
+  if(!resume)
+  {
+    throw new ApiError(404, "Resume not found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, resume, "Resume fetched successfully"));
+})
+
 //Update Resume
 const updateResume = asyncHandler(async (req, res) => {
-    const { personalDetails, skills, workExperience, education, projects } = req.body;
-    const { fullName, email, phone, linkedin, github } = personalDetails;
-    if(!(fullName && email && phone && linkedin && github && skills && workExperience && education && projects))
-    {
-        throw new ApiError(400,"Atleast One field is required");
-    }
+  const { personalDetails, skills, workExperience, education, projects } = req.body;
+  const { fullName, email, phone, linkedin, github } = personalDetails;
+  if (!(fullName && email && phone && linkedin && github && skills && workExperience && education && projects)) {
+    throw new ApiError(400, "Atleast One field is required");
+  }
 
-    const resume = await Resume.findById(req.user.resume);
+  const resume = await Resume.findById(req.user.resume);
 
-    if(!resume)
-    {
-        throw new ApiError(404,"Resume not found");
-    }
+  if (!resume) {
+    throw new ApiError(404, "Resume not found");
+  }
 
-    resume.personalDetails.fullName = fullName ? fullName : resume.personalDetails.fullName;
-    resume.personalDetails.email = email ? email : resume.personalDetails.email;
-    resume.personalDetails.phone = phone ? phone : resume.personalDetails.phone;
-    resume.personalDetails.linkedin = linkedin ? linkedin : resume.personalDetails.linkedin;
-    resume.personalDetails.github = github ? github : resume.personalDetails.github;
-    resume.skills = skills ? skills : resume.skills;
-    resume.workExperience = workExperience ? workExperience : resume.workExperience;
-    resume.education = education ? education : resume.education;
-    resume.projects = projects ? projects : resume.projects;
+  resume.personalDetails.fullName = fullName ? fullName : resume.personalDetails.fullName;
+  resume.personalDetails.email = email ? email : resume.personalDetails.email;
+  resume.personalDetails.phone = phone ? phone : resume.personalDetails.phone;
+  resume.personalDetails.linkedin = linkedin ? linkedin : resume.personalDetails.linkedin;
+  resume.personalDetails.github = github ? github : resume.personalDetails.github;
+  resume.skills = skills ? skills : resume.skills;
+  resume.workExperience = workExperience ? workExperience : resume.workExperience;
+  resume.education = education ? education : resume.education;
+  resume.projects = projects ? projects : resume.projects;
 
-    await resume.save();
+  await resume.save();
 
-    return res.status(200).json(new ApiResponse(200,resume,"Resume updated successfully"));
+  return res.status(200).json(new ApiResponse(200, resume, "Resume updated successfully"));
 })
 
 //delete Resume
@@ -522,13 +540,13 @@ const getAllEntriesOfModel = asyncHandler(async (req, res) => {
             { industry: { $regex: search, $options: 'i' } },
           ],
         };
-        if (filters && filters.salaryMin  && filters.salaryMax ) {
+        if (filters && filters.salaryMin && filters.salaryMax) {
           query.salary = { $gte: filters.salaryMin, $lte: filters.salaryMax };
         }
         if (filters && filters.workExperienceMinYears) {
           query.workExperienceMinYears = { $gte: filters.workExperienceMinYears };
         }
-        if (filters && filters.isRemote ) {
+        if (filters && filters.isRemote) {
           query.isRemote = filters.isRemote;
         }
         if (filters && filters.employmentType) {
@@ -547,16 +565,16 @@ const getAllEntriesOfModel = asyncHandler(async (req, res) => {
           ],
         };
         break;
-        case 'applications':
-          query = {
-            $or: [
-              { status: { $regex: search, $options: 'i' } },
-            ],
-          };
-          if (filters && filters.status) {
-            query.status = filters.status;
-          }
-          break;
+      case 'applications':
+        query = {
+          $or: [
+            { status: { $regex: search, $options: 'i' } },
+          ],
+        };
+        if (filters && filters.status) {
+          query.status = filters.status;
+        }
+        break;
       default:
         throw new ApiError(400, 'Invalid model name');
     }
@@ -584,6 +602,7 @@ export {
   updateCompanyDetails,
   addResume,
   getResumeDetails,
+  getResumeById,
   updateResume,
   deleteResume,
   getAllEntriesOfModel,
