@@ -134,6 +134,51 @@ const getJobs = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
 });
 
+const searchJobs = async (req, res) => {
+  const { search, filters } = req.body;
+
+  let query = {};
+  if (search || filters) {
+    
+        query = {
+          $or: [
+            { locations: { $elemMatch: { $regex: search, $options: 'i' } } },
+            { title: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } },
+            { skillsRequired: { $elemMatch: { $regex: search, $options: 'i' } } },
+            { industry: { $regex: search, $options: 'i' } },
+          ],
+        };
+        if (filters.workExperienceMinYears) {
+            query.workExperienceMinYears = { $gte: parseInt(filters.workExperienceMinYears, 10) };
+        }
+        if (filters.isRemote) {
+            query.isRemote = String(filters.isRemote) == 'true';
+        }
+        if (filters && filters.employmentType) {
+          query.employmentType = filters.employmentType;
+        }
+     
+  }
+
+
+  try {
+    const jobs = await Job.find(query).exec();
+    let filteredJobs = jobs;
+
+    if (filters.salaryMin) {
+      filteredJobs = jobs.filter(job => parseInt(job.salary) >= parseInt(filters.salaryMin));
+    }
+
+    res.status(200).json({ data: filteredJobs });
+  } catch (error) {
+    console.error('Error searching jobs:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+
+
 const updateJob = asyncHandler(async (req, res) => {
   const postedBy = req.user;
   const { id: jobId } = req.params;
@@ -194,6 +239,7 @@ export {
   createJob,
   getJob,
   getJobs,
+  searchJobs,
   getRecruiterJobs,
   updateJob,
   deleteJob,

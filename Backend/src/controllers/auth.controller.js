@@ -8,6 +8,7 @@ import Company from "../models/company.model.js";
 import Job from "../models/job.model.js";
 import { Resume } from "../models/resume.model.js";
 import Application from "../models/application.model.js";
+import mongoose, { model } from "mongoose";
 
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -540,14 +541,12 @@ const getAllEntriesOfModel = asyncHandler(async (req, res) => {
             { industry: { $regex: search, $options: 'i' } },
           ],
         };
-        if (filters && filters.salaryMin && filters.salaryMax) {
-          query.salary = { $gte: filters.salaryMin, $lte: filters.salaryMax };
+  
+        if (filters.workExperienceMinYears) {
+            query.workExperienceMinYears = { $gte: parseInt(filters.workExperienceMinYears, 10) };
         }
-        if (filters && filters.workExperienceMinYears) {
-          query.workExperienceMinYears = { $gte: filters.workExperienceMinYears };
-        }
-        if (filters && filters.isRemote) {
-          query.isRemote = filters.isRemote;
+        if (filters.isRemote) {
+            query.isRemote = String(filters.isRemote) == 'true';
         }
         if (filters && filters.employmentType) {
           query.employmentType = filters.employmentType;
@@ -580,9 +579,110 @@ const getAllEntriesOfModel = asyncHandler(async (req, res) => {
     }
   }
 
-  const entries = await Model.find(query).exec();
-  res.status(200).json({ data: entries });
+  try {
+    const entries = await Model.find(query).exec();
+    let filteredEntries = entries;
+
+    
+    if (modelName.toLowerCase() === 'jobs' && (filters.salaryMin|| filters.salaryMax)) {
+      filteredEntries = entries.filter(job => {
+        const salary = parseInt(job.salary, 10);
+        const salaryMin = filters.salaryMin ? parseInt(filters.salaryMin, 10) : 0;
+        const salaryMax = filters.salaryMax ? parseInt(filters.salaryMax, 10) : Number.MAX_SAFE_INTEGER;
+    
+        if (salaryMin && !salaryMax) {
+          return salary >= salaryMin;
+        } else if (salaryMax && !salaryMin) {
+          return salary <= salaryMax;
+        } else if (salaryMin && salaryMax) {
+          return salary >= salaryMin && salary <= salaryMax;
+        } else {
+          return true; 
+        }
+      });
+    }
+
+    res.status(200).json({ data: filteredEntries });
+  } catch (error) {
+    console.error(`Error getting entries of ${modelName.toLowerCase()} :`, error);
+    res.status(500).json({ message: 'Server Error' });
+  }
 });
+
+
+const countEntriesOfModel = asyncHandler(async (req, res) => {
+  const { modelName } = req.body;
+
+  let Model;
+  switch (modelName.toLowerCase().trim()) {
+    case 'users':
+      Model = User;
+      break;
+    case 'companies':
+      Model = Company;
+      break;
+    case 'jobs':
+      Model = Job;
+      break;
+    case 'resumes':
+      Model = Resume;
+      break;
+    case 'applications':
+      Model = Application;
+      break;
+    default:
+      throw new ApiError(400, 'Invalid model name');
+  }
+
+  try {
+    const count = await Model.countDocuments();
+    res.status(200).json({ data : count });
+  } catch (error) {
+    console.error(`Error counting ${modelName.toLowerCase()} :`, error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+
+
+const deleteEntry = async (req, res) => {
+  const { modelName, entryId } = req.body;
+
+  let Model;
+  switch (modelName.toLowerCase()) {
+    case 'users':
+      Model = User;
+      break;
+    case 'companies':
+      Model = Company;
+      break;
+    case 'jobs':
+      Model = Job;
+      break;
+    case 'resumes':
+      Model = Resume;
+      break;
+    case 'applications':
+      Model = Application;
+      break;
+    default:
+      return res.status(400).json({ message: 'Invalid model name' });
+  }
+
+  try {
+    const entry = await Model.findByIdAndDelete(entryId);
+
+    if (!entry) {
+      return res.status(404).json({ message: 'Entry not found' });
+    }
+
+    res.status(200).json({ message: 'Entry deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting entry:', error);
+    res.status(500).json({ message: 'Failed to delete entry', error: error.message });
+  }
+};
+
 
 
 
@@ -606,4 +706,6 @@ export {
   updateResume,
   deleteResume,
   getAllEntriesOfModel,
+  countEntriesOfModel,
+  deleteEntry,
 };

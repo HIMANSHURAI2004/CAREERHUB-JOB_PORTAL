@@ -19,6 +19,7 @@ const Spinner = () => (
 function AdminDashboard() {
     const [model, setModel] = useState('users');
     const [entries, setEntries] = useState([]);
+    const [count, setCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
@@ -32,34 +33,61 @@ function AdminDashboard() {
         status: '',
     });
 
-    useEffect(() => {
-        const fetchEntries = async () => {
-            setIsLoading(true);
-            try {
-                const response = await fetch('http://localhost:3000/api/v1/user/admin-dashboard', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ modelName: model, search: searchTerm, filters }),
-                    credentials: 'include',
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch entries');
-                }
-
-                const responseData = await response.json();
-                setEntries(responseData.data);
-            } catch (error) {
-                setErrorMessage(error.message || 'Failed to fetch entries');
-            } finally {
-                setIsLoading(false);
+    const fetchEntries = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('http://localhost:3000/api/v1/user/admin-dashboard', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ modelName: model, search: searchTerm, filters }),
+                credentials: 'include',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch entries');
             }
-        };
 
+            const responseData = await response.json();
+            setEntries(responseData.data);
+        } catch (error) {
+            setErrorMessage(error.message || 'Failed to fetch entries');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    const fetchCount = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('http://localhost:3000/api/v1/user/count-entries', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ modelName: model}),
+                credentials: 'include',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch count');
+            }
+
+            const responseData = await response.json();
+            setCount(responseData.data);
+        } catch (error) {
+            setErrorMessage(error.message || 'Failed to fetch count');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+      
+
+    useEffect(() => {
         fetchEntries();
     }, [model, searchTerm, filters]);
+
+    useEffect(() => {
+        fetchCount();
+    }, [model]);
 
     const handleModelChange = (value) => {
         setModel(value);
@@ -71,7 +99,7 @@ function AdminDashboard() {
             isRemote: '',
             employmentType: '',
             status: '',
-        }); // Reset filters when model changes
+        }); 
     };
 
     const handleSearchChange = (e) => {
@@ -80,16 +108,73 @@ function AdminDashboard() {
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
-        setFilters({ ...filters, [name]: value });
+        const parsedValue = (name === 'salaryMin' || name === 'workExperienceMinYears')
+            ? Math.max(0, parseInt(value, 10))
+            : (name === 'salaryMax') 
+            ? (Math.min(parseInt(value, 10),Number.MAX_SAFE_INTEGER))
+            : name === 'isRemote'
+            ? value === true
+            : value;
+        setFilters({ ...filters, [name]: parsedValue });
     };
+
+    const handleDelete = async (entryId) => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('http://localhost:3000/api/v1/user/admin-delete', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    modelName: model,
+                    entryId,
+                }),
+                credentials: 'include',
+            });
+
+            console.log(response)
+
+            if (!response.ok) {
+                throw new Error('Failed to delete entry');
+            }
+
+            setEntries(entries.filter(entry => entry._id !== entryId));
+        } catch (error) {
+            setErrorMessage('Failed to delete entry');
+        }finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleReset = () => {
+        fetchEntries();
+        setFilters({
+            role: '',
+            salaryMin: '',
+            salaryMax: '',
+            workExperienceMinYears: '',
+            isRemote: '',
+            employmentType: '',
+            status: '',
+        });
+    };
+
 
     return (
         <div className="container mx-auto p-4">
             <div className="flex items-center justify-between mb-4">
-                <Label htmlFor="modelSelect">Select Model</Label>
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    className="w-2/3 px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                />
+                <Label htmlFor="modelSelect"></Label>
                 <Select onValueChange={handleModelChange} className="w-1/3">
-                    <SelectTrigger id="modelSelect" className="w-full">
-                        <SelectValue placeholder="Select a model" />
+                    <SelectTrigger id="modelSelect" className="w-1/3">
+                        <SelectValue placeholder="Select model" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="users">Users</SelectItem>
@@ -99,25 +184,19 @@ function AdminDashboard() {
                         <SelectItem value="applications">Applications</SelectItem>
                     </SelectContent>
                 </Select>
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    className="w-1/3 px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
             </div>
 
             {model === 'users' && (
                 <div className="mb-4">
-                    <Label htmlFor="role">Role</Label>
+                    <Label htmlFor="role"></Label>
                     <Select onValueChange={(value) => setFilters({ ...filters, role: value })} className="w-1/3">
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-1/3">
                             <SelectValue placeholder="Select role" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="student">Student</SelectItem>
                             <SelectItem value="recruiter">Recruiter</SelectItem>
+                            <SelectItem value="admin">Admin</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -125,49 +204,53 @@ function AdminDashboard() {
 
             {model === 'jobs' && (
                 <div className="mb-4">
-                    <Label htmlFor="salaryMin">Salary Min</Label>
+                    <Label htmlFor="salaryMin"></Label>
                     <input
                         type="number"
                         name="salaryMin"
-                        className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                        className="w-1/3 px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
                         value={filters.salaryMin}
                         onChange={handleFilterChange}
+                        placeholder='Min Salary'
                     />
-                    <Label htmlFor="salaryMax">Salary Max</Label>
+                    <Label htmlFor="salaryMax"></Label>
                     <input
                         type="number"
                         name="salaryMax"
-                        className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
-                        value={filters.salaryMax}
+                        className="w-1/3 px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                        value={ filters.salaryMax}
                         onChange={handleFilterChange}
+                        placeholder='Max Salary'
                     />
-                    <Label htmlFor="workExperienceMinYears">Work Experience Min Years</Label>
+                    <Label htmlFor="workExperienceMinYears"></Label>
                     <input
                         type="number"
                         name="workExperienceMinYears"
-                        className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                        className="w-1/3 px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
                         value={filters.workExperienceMinYears}
                         onChange={handleFilterChange}
+                        placeholder='Min Experience ( Years )'
                     />
-                    <Label htmlFor="isRemote">Remote</Label>
-                    <Select onValueChange={(value) => setFilters({ ...filters, isRemote: value === 'true' })} className="w-1/3">
-                        <SelectTrigger className="w-full">
+                    <Label htmlFor="isRemote"></Label>
+                    <Select onValueChange={(value) => setFilters({ ...filters, isRemote: value == 'true' })} className="w-1/3">
+                        <SelectTrigger className="w-1/3">
                             <SelectValue placeholder="Select remote option" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="true">Yes</SelectItem>
-                            <SelectItem value="false">No</SelectItem>
+                            <SelectItem value='true' >Yes</SelectItem>
+                            <SelectItem value='false'>All</SelectItem>
                         </SelectContent>
                     </Select>
-                    <Label htmlFor="employmentType">Employment Type</Label>
+                    <Label htmlFor="employmentType"></Label>
                     <Select onValueChange={(value) => setFilters({ ...filters, employmentType: value })} className="w-1/3">
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-1/3">
                             <SelectValue placeholder="Select employment type" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="full-time">Full-Time</SelectItem>
-                            <SelectItem value="part-time">Part-Time</SelectItem>
-                            <SelectItem value="contract">Contract</SelectItem>
+                            <SelectItem value="Full-time">Full-Time</SelectItem>
+                            <SelectItem value="Part-time">Part-Time</SelectItem>
+                            <SelectItem value="Contract">Contract</SelectItem>
+                            <SelectItem value="Internship">Internship</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -175,19 +258,35 @@ function AdminDashboard() {
 
             {model === 'applications' && (
                 <div className="mb-4">
-                    <Label htmlFor="status">Status</Label>
+                    <Label htmlFor="status"></Label>
                     <Select onValueChange={(value) => setFilters({ ...filters, status: value })} className="w-1/3">
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-1/3">
                             <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="accepted">Accepted</SelectItem>
-                            <SelectItem value="rejected">Rejected</SelectItem>
+                            <SelectItem value="Applied">Applied</SelectItem>
+                            <SelectItem value="Interviewing">Interviewing</SelectItem>
+                            <SelectItem value="Offered">Offered</SelectItem>
+                            <SelectItem value="Rejected">Rejected</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
             )}
+
+            <div className="flex justify-end items-center mb-4">
+                <div className="text-md font-semibold mr-4">
+                    <span className="bg-blue-500 text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">
+                        {count}
+                    </span>
+                </div>
+                <button 
+                    onClick={handleReset} 
+                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
+                >
+                    Reset
+                </button>
+            </div>
+
 
             {isLoading ? (
                 <div className="flex justify-center items-center mt-4">
@@ -202,12 +301,15 @@ function AdminDashboard() {
                     {entries.map((entry, index) => (
                         <Card key={index}>
                             <CardContent>
-                                <ul>
+                                <div className="flex justify-between items-start">
+                                <ul className="w-full">
                                     {Object.entries(entry).map(([key, value]) => (
-                                        !['password', 'refreshToken', '__v', 'createdAt', 'updatedAt'].includes(key) && (
+                                        !['password', 'refreshToken', '__v', 'createdAt', 'updatedAt', 'workExperience', 'education'].includes(key) && (
                                             <li key={key} className="py-2">
                                                 <span className="font-semibold">{key}:</span>
-                                                {Array.isArray(value) ? (
+                                                {typeof value === 'boolean' ? (
+                                                    value ? 'True' : 'False'
+                                                ) : Array.isArray(value) ? (
                                                     <ul className="list-disc pl-4">
                                                         {value.map((item, index) => (
                                                             <li key={index}>
@@ -230,6 +332,14 @@ function AdminDashboard() {
                                         )
                                     ))}
                                 </ul>
+
+                                    <button
+                                        onClick={() => handleDelete(entry._id)}
+                                        className="text-red-500 hover:text-red-700 font-bold"
+                                    >
+                                        &times;
+                                    </button>
+                                </div>
                             </CardContent>
                         </Card>
                     ))}

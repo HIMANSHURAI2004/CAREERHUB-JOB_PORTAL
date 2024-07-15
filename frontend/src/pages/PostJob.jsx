@@ -73,7 +73,7 @@ const PostJob = () => {
         toast({
             description: "Job Posted Successfully",
           })
-          navigate("/")
+          navigate("/user-dashboard")
     }
 
       const responseData = await response.json();
