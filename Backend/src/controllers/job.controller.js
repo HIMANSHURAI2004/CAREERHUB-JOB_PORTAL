@@ -3,6 +3,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import Company from "../models/company.model.js";
+import Application from "../models/application.model.js";
 
 const createJob = asyncHandler(async (req, res) => {
   const { title, description, locations, salary, deadline, workExperienceMinYears, isRemote, skillsRequired, employmentType, industry } = req.body;
@@ -59,6 +60,18 @@ const getJob = asyncHandler(async (req, res) => {
   }
 
   return res.status(200).json(new ApiResponse(200, job, "Job fetched successfully"));
+});
+
+const getRecruiterJobs = asyncHandler(async (req, res) => {
+  const postedBy = req.user;
+
+  const jobs = await Job.find({ postedBy }).select("-__v");
+
+  if (jobs.length === 0) {
+    return res.status(200).json(new ApiResponse(200, jobs, "No jobs found"));
+  }
+
+  return res.status(200).json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
 });
 
 // const getJobs = asyncHandler(async (req, res) => {
@@ -171,35 +184,15 @@ const updateJob = asyncHandler(async (req, res) => {
   const { id: jobId } = req.params;
   const { title, description, locations, salary, company, deadline, workExperienceMinYears, isRemote, skillsRequired, employmentType, industry } = req.body;
 
-  if (!(title || description || locations || salary || company || deadline )) {
+  if (!(title || description || locations || salary || company || deadline || workExperienceMinYears || isRemote || skillsRequired || employmentType || industry)) {
     throw new ApiError(400, "At least one field is required");
   }
 
   const job = await Job.findOne({ _id: jobId, postedBy });
-
   if (!job) {
     throw new ApiError(404, "Job not found");
   }
-
-  job.title = title !== undefined ? title : job.title;
-  job.description = description !== undefined ? description : job.description;
-  job.company = company !== undefined ? company : job.company;
-  
-  job.locations = locations !== undefined ? locations.split(",").map(loc => loc.trim()) : job.locations;
-
-  job.salary = salary !== undefined ? salary : job.salary;
-  job.deadline = deadline !== undefined ? deadline : job.deadline;
-  job.workExperienceMinYears = workExperienceMinYears !== undefined ? workExperienceMinYears : job.workExperienceMinYears;
-  job.isRemote = isRemote !== undefined ? isRemote : job.isRemote;
-
-  job.skillsRequired = skillsRequired !== undefined ? skillsRequired.split(",").map(skill => skill.trim()) : job.skillsRequired;
-
-  job.employmentType = employmentType !== undefined ? employmentType : job.employmentType;
-  job.industry = industry !== undefined ? industry : job.industry;
-
-  await job.save();
-
-  const updatedJob = await Job.findById(jobId).select("-__v");
+  const updatedJob = await Job.findByIdAndUpdate(jobId, req.body, { new: true }).populate('company').select("-__v");
 
   return res.status(200).json(new ApiResponse(200, updatedJob, "Job updated successfully"));
 });
@@ -213,7 +206,7 @@ const deleteJob = asyncHandler(async (req, res) => {
   if (!job) {
     throw new ApiError(404, "Job not found");
   }
-
+  const applications = await Application.deleteMany({ job: jobId });
   return res.status(200).json(new ApiResponse(200, null, "Job deleted successfully"));
 });
 
@@ -225,7 +218,7 @@ const getCompanyDetails = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Company not found");
   }
 
-  const populatedCompany = await Company.findById(company._id).select("-__v");
+  const populatedCompany = await Company.findById(company._id).populate("recruiter").select("-__v");
 
   return res.status(200).json(new ApiResponse(200, populatedCompany, "Company details fetched successfully"));
 });
@@ -247,6 +240,7 @@ export {
   getJob,
   getJobs,
   searchJobs,
+  getRecruiterJobs,
   updateJob,
   deleteJob,
   getCompanyDetails,

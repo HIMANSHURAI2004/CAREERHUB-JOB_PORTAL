@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BiArrowBack } from 'react-icons/bi';
+import { Button } from "@/components/ui/button";
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
 
 const JobDetails = () => {
   const { id } = useParams();
@@ -9,7 +12,8 @@ const JobDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [recruiter, setRecruiter] = useState(null);
-  const [company, setCompany] = useState(null); 
+  const [company, setCompany] = useState(null);
+  const { toast } = useToast()
 
   useEffect(() => {
     const fetchJobAndRecruiter = async () => {
@@ -46,6 +50,35 @@ const JobDetails = () => {
     fetchJobAndRecruiter();
   }, [id]);
 
+  const handleApplyJob = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/application/create-application/${id}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "Failed to apply for job",
+        })
+        throw new Error('Failed to apply for job');
+      } else {
+        toast({
+          description: "Application submitted successfully",
+        })
+        navigate('/applications');
+      }
+    } catch (error) {
+      console.error('Failed to apply for job:', error);
+      setError('Failed to apply for job');
+      
+    }
+  }
   const handleGoBack = () => {
     navigate(-1);
   };
@@ -145,6 +178,7 @@ const JobDetails = () => {
               </p>
             </div>
           )}
+          <Button onClick={handleApplyJob}>Apply</Button>
         </div>
       </div>
     </div>

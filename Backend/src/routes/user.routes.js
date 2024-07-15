@@ -1,5 +1,9 @@
 import {Router} from "express";
+<<<<<<< HEAD
 import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken, deleteEntry, countEntriesOfModel} from "../controllers/auth.controller.js"
+=======
+import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken, getResumeById} from "../controllers/auth.controller.js"
+>>>>>>> 3081c6ab17522f1707f6b1a8111092ebd93fbda4
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/user.middleware.js";
 
@@ -39,6 +43,7 @@ router.route("/delete-user").delete(verifyJWT , deleteUser);
 
 router.route("/add-resume").post(verifyJWT,addResume);
 router.route("/get-resume").get(verifyJWT,getResumeDetails);
+router.route("/get-applicant-resume/:id").get(verifyJWT,getResumeById);
 router.route("/update-resume").patch(verifyJWT,updateResume);
 router.route("/delete-resume").delete(verifyJWT,deleteResume);
 

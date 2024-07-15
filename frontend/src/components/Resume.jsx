@@ -48,19 +48,19 @@ function Resume() {
         ],
         projects: [''],
     });
-
-    useEffect(() => {
-        async function fetchResumeData() {
-            try {
-                const response = await axios.get('http://localhost:3000/api/v1/user/get-resume', {
-                    withCredentials: true,
-                });
-                setResumeData(response.data.data);
-                setEditData(response.data.data); // Set initial edit data
-            } catch (error) {
-                console.error('Error fetching resume data:', error);
-            }
+    
+    async function fetchResumeData() {
+        try {
+            const response = await axios.get('http://localhost:3000/api/v1/user/get-resume', {
+                withCredentials: true,
+            });
+            setResumeData(response.data.data);
+            setEditData(response.data.data); // Set initial edit data
+        } catch (error) {
+            console.error('Error fetching resume data:', error);
         }
+    }
+    useEffect(() => {
         fetchResumeData();
     }, []);
 
@@ -96,6 +96,7 @@ function Resume() {
                 withCredentials: true,
             });
             setResumeData(null); // or redirect to another page
+            fetchResumeData();
         } catch (error) {
             console.error('Error deleting resume:', error);
         }
@@ -113,8 +114,8 @@ function Resume() {
                             General
                         </Link>
                         <Link to="/resume" className="font-semibold text-blue-600">Resume</Link>
-                        <Link to="/account">Account</Link>
                         <Link to="/applications">Applications</Link>
+                        <Link to="/account">Account</Link>
                     </nav>
                     {/* <div className="mx-auto grid w-full max-w-6xl gap-2">
                         <h1 className="text-4xl font-bold text-gray-900">Resume</h1>
