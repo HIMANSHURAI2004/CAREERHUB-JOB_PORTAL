@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
+import { RiEyeFill, RiEyeOffFill } from 'react-icons/ri';
 
 function SignUp() {
     const navigate = useNavigate();
@@ -31,6 +32,10 @@ function SignUp() {
 
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+
 
     const handleChange = (e) => {
         const { id, value, files } = e.target;
@@ -84,6 +89,14 @@ function SignUp() {
         }
     };
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(prev => !prev);
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(prev => !prev);
+    };
+
     return (
         <div className='w-full min-h-screen flex items-center py-6 px-4 sm:px-6 lg:px-28 bg-blue-200'>
             <div className='min-w-full flex flex-col  lg:flex-row bg-white shadow-2xl overflow-hidden max-w-screen-lg mx-auto '>
@@ -118,26 +131,45 @@ function SignUp() {
                                 />
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
+                            <div className="grid gap-2">
+                                <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
+                                <div className="relative">
                                     <Input
                                         id="password"
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         value={formData.password}
                                         onChange={handleChange}
                                         required
                                     />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600"
+                                        onClick={togglePasswordVisibility}
+                                    >
+                                        {showPassword ? <RiEyeOffFill /> : <RiEyeFill />}
+                                    </button>
                                 </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="confirmPassword">Confirm Password <span className="text-red-500">*</span></Label>
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="confirmPassword">Confirm Password <span className="text-red-500">*</span></Label>
+                                <div className="relative">
                                     <Input
                                         id="confirmPassword"
-                                        type="password"
+                                        type={showConfirmPassword ? 'text' : 'password'}
                                         value={confirmPassword}
-                                        onChange={(event) => setConfirmPassword(event.target.value)}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
                                         required
                                     />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600"
+                                        onClick={toggleConfirmPasswordVisibility}
+                                    >
+                                        {showConfirmPassword ? <RiEyeOffFill /> : <RiEyeFill />}
+                                    </button>
                                 </div>
+                            </div>
+
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="contactNo">Contact No. <span className="text-red-500">*</span></Label>

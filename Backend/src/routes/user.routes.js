@@ -1,9 +1,5 @@
 import {Router} from "express";
-<<<<<<< HEAD
-import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken, deleteEntry, countEntriesOfModel} from "../controllers/auth.controller.js"
-=======
-import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken, getResumeById} from "../controllers/auth.controller.js"
->>>>>>> 3081c6ab17522f1707f6b1a8111092ebd93fbda4
+import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken, deleteEntry, countEntriesOfModel, getResumeById} from "../controllers/auth.controller.js"
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/user.middleware.js";
 

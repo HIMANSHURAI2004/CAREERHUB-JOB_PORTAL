@@ -16,14 +16,11 @@ import Applications from './components/Applications';
 import { Toaster } from "@/components/ui/toaster"
 import JobDetails from './pages/JobDetails';
 import AdminDashboard from './pages/AdminDashboard';
-<<<<<<< HEAD
 import UserDashboard from './pages/UserDashboard';
-=======
 import CompanyDetails from './components/CompanyDetails';
 import UserJobs from './components/UserJobs';
 import JobApplications from './pages/JobApplications';
 import UserResume from './pages/UserResume';
->>>>>>> 3081c6ab17522f1707f6b1a8111092ebd93fbda4
 
 const router = createBrowserRouter(
   createRoutesFromElements(
