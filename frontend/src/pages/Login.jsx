@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
+import { RiEyeFill, RiEyeOffFill } from 'react-icons/ri';
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ function Login() {
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -61,6 +63,11 @@ function Login() {
         }
     };
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(prev => !prev);
+    };
+    
+
     return (
         <div className='w-full h-screen py-12 px-4 sm:px-6 lg:px-20 bg-blue-200 flex items-center justify-center'>
             <div className='w-full max-w-5xl flex flex-col lg:flex-row bg-white shadow-2xl overflow-hidden max-h-[95%]'>
@@ -94,17 +101,29 @@ function Login() {
                                                 />
                                             </div>
                                             <div className="grid">
-                                                <Label htmlFor="password" className="font-semibold pb-2">
-                                                    Password <span className="text-red-500">*</span>
-                                                </Label>
-                                                <Input
-                                                    id="password"
-                                                    type="password"
-                                                    value={formData.password}
-                                                    onChange={handleChange}
-                                                    placeholder="Enter Password"
-                                                    required
-                                                />
+                                                <div className="grid gap-2">
+                                                    <Label htmlFor="password" className="font-semibold pb-2">
+                                                        Password <span className="text-red-500">*</span>
+                                                    </Label>
+                                                    <div className="relative">
+                                                        <Input
+                                                            id="password"
+                                                            type={showPassword ? 'text' : 'password'}
+                                                            value={formData.password}
+                                                            onChange={handleChange}
+                                                            placeholder="Enter Password"
+                                                            required
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600"
+                                                            onClick={togglePasswordVisibility}
+                                                        >
+                                                            {showPassword ? <RiEyeOffFill /> : <RiEyeFill />}
+                                                        </button>
+                                                    </div>
+                                                </div>
+
                                                 <div className="text-end my-1">
                                                     <Link to='/forgot-password' className="text-xs text-blue-600 font-medium">
                                                         Forgot Password?
