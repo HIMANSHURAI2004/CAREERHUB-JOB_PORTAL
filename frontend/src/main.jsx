@@ -15,15 +15,16 @@ import Account from './components/Account';
 import Applications from './components/Applications';
 import { Toaster } from "@/components/ui/toaster"
 import JobDetails from './pages/JobDetails';
-import AdminDashboard from './pages/AdminDashboard';
-<<<<<<< HEAD
 import UserDashboard from './pages/UserDashboard';
-=======
 import CompanyDetails from './components/CompanyDetails';
 import UserJobs from './components/UserJobs';
 import JobApplications from './pages/JobApplications';
 import UserResume from './pages/UserResume';
->>>>>>> 3081c6ab17522f1707f6b1a8111092ebd93fbda4
+import AdminDashboardUsers from './pages/AdminDashboardUsers';
+import AdminDashboardJobs from './pages/AdminDashboardJobs';
+import AdminDashboardApplications from './pages/AdminDashboardApplications';
+import AdminDashboardSearch from './pages/AdminDashboardSearch';
+import AdminAccount from './pages/AdminAccount';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -41,10 +42,14 @@ const router = createBrowserRouter(
         <Route path='/user-job' element={<UserJobs />} />
         <Route path='/job-applications/:id' element={<JobApplications/>} />
         <Route path='/user-resume/:id' element={<UserResume/>} />
-        <Route path='admin-dashboard' element={<AdminDashboard />} />
         <Route path='user-dashboard' element={<UserDashboard />} />
       </Route>
-      
+        <Route path='/admin/dashboard/search' element={<AdminDashboardSearch />} />
+        <Route path='/admin/dashboard/users' element={<AdminDashboardUsers />} />
+        <Route path='/admin/dashboard/jobs' element={<AdminDashboardJobs />} />
+        <Route path='/admin/dashboard/applications' element={<AdminDashboardApplications />} />
+        <Route path="/admin/account" element={<AdminAccount/>} />
+
       <Route path='/signup' element={<SignUp />} />
       <Route path='/login' element={<Login />} />
       <Route path='/admin/dashboard' element={<Dashboard/>} />

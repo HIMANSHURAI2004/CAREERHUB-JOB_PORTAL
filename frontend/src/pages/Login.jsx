@@ -50,7 +50,7 @@ function Login() {
                 throw new Error(response.data?.message || 'Failed to Login');
             }
             if (response.data.data.user.role === "admin"){
-                navigate('/admin-dashboard')
+                navigate('/admin/dashboard')
             }else {
                 navigate('/user-dashboard');
             }

@@ -1,11 +1,9 @@
 import {Router} from "express";
-<<<<<<< HEAD
-import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken, deleteEntry, countEntriesOfModel} from "../controllers/auth.controller.js"
-=======
-import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken, getResumeById} from "../controllers/auth.controller.js"
->>>>>>> 3081c6ab17522f1707f6b1a8111092ebd93fbda4
+import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken,getResumeById, deleteEntry, countEntriesOfModel, getCountsOfAllOfModels} from "../controllers/auth.controller.js"
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/user.middleware.js";
+
+
 
 const router = Router()
 
@@ -49,6 +47,7 @@ router.route("/delete-resume").delete(verifyJWT,deleteResume);
 
 router.route("/admin-dashboard").post(verifyJWT,getAllEntriesOfModel)
 router.route("/count-entries").post(verifyJWT,countEntriesOfModel)
+router.route("/get-all-counts").post(verifyJWT,getCountsOfAllOfModels)
 router.route("/admin-delete").delete(verifyJWT,deleteEntry)
 
 

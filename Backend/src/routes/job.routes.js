@@ -1,10 +1,6 @@
 import {Router} from "express";
 import { verifyJWT } from "../middlewares/user.middleware.js";
-<<<<<<< HEAD
-import { createJob, deleteJob, getCompanyDetails, getCompanyDetailsById, getJob, getJobs, searchJobs, updateJob } from "../controllers/job.controller.js";
-=======
-import { createJob, deleteJob, getCompanyDetails, getCompanyDetailsById, getJob, getJobs, getRecruiterJobs, updateJob } from "../controllers/job.controller.js";
->>>>>>> 3081c6ab17522f1707f6b1a8111092ebd93fbda4
+import { createJob, deleteJob, getCompanyDetails, getCompanyDetailsById, getJob, getJobs, searchJobs,getRecruiterJobs, updateJob } from "../controllers/job.controller.js";
 
 const router = Router();
 

@@ -4,7 +4,9 @@ import { BiArrowBack } from 'react-icons/bi';
 import { Button } from "@/components/ui/button";
 import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
-
+import { SeparatorHorizontal } from 'lucide-react';
+import { Separator } from '@radix-ui/react-dropdown-menu';
+import { IoIosArrowBack } from "react-icons/io";
 const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -59,7 +61,7 @@ const JobDetails = () => {
           'Content-Type': 'application/json',
         },
       });
-
+      
       if (!response.ok) {
         toast({
           variant: "destructive",
@@ -76,7 +78,7 @@ const JobDetails = () => {
     } catch (error) {
       console.error('Failed to apply for job:', error);
       setError('Failed to apply for job');
-      
+
     }
   }
   const handleGoBack = () => {
@@ -122,63 +124,84 @@ const JobDetails = () => {
   }
 
   return (
-    <div className="bg-gray-100 py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg overflow-hidden relative">
-        <button
+    <div className="bg-gray-100 py-3 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div>
+        <div
           onClick={handleGoBack}
-          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none absolute top-4 left-4 z-10"
+          className="p-2 z-10 flex items-center text-lg"
         >
-          <BiArrowBack className="text-xl text-gray-600" />
-        </button>
-        <div className="p-6 pt-16">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">{job.title}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            <div>
-              <p className="text-gray-700">
-                <span className="font-semibold">Posted By:</span> {recruiter?.userName}
+          <IoIosArrowBack className="text-xl text-gray-600"/>
+          <span className='cursor-pointer'>Show Similar Jobs</span>
+        </div>
+      </div>
+      <div className=" mx-auto bg-white shadow-md  overflow-hidden ">
+        <div className="p-6 ">
+          <div className='flex flex-col gap-y-4'>
+            <h2 className=" text-2xl md:text-3xl font-bold text-gray-800 ">{job.title}</h2>
+            <div className='mb-4'>
+              <p className="font-semibold text-lg text-indigo-600">
+                {company?.companyName || 'Not specified'}
               </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Date Posted:</span> {new Date(job.createdAt).toLocaleDateString()}
+              <p className={`text-gray-500 ${job.locations.length > 0 ? 'block' : 'hidden'}`}>
+                Multiple Locations, India
               </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Deadline:</span> {new Date(job.deadline).toLocaleDateString()}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Locations:</span> {job.locations.length > 0 ? job.locations.join(', ') : 'Not specified'}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Industry:</span> {job.industry || 'Not specified'}
-              </p>
+
             </div>
-            <div>
-              <p className="text-gray-700">
-                <span className="font-semibold">Salary:</span> {job.salary || 'Not specified'}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Experience Required:</span> {job.workExperienceMinYears}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Remote:</span> {job.isRemote ? 'Yes' : 'No'}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Employment Type:</span> {job.employmentType}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Company:</span> {company?.companyName || 'Not specifi'}
-              </p>
+            <div className='mb-12'>
+              <Button onClick={handleApplyJob} className='bg-blue-700 px-6 rounded-none  hover:bg-blue-900 '>Apply</Button>
             </div>
           </div>
-          <p className="text-gray-700 mb-6">
-            <span className="font-semibold">Job Description:</span> {job.description}
-          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6 py-4">
+            <p className="font-semibold">
+              <span className="text-gray-500 font-normal">Date Posted: </span> {new Date(job.createdAt).toLocaleDateString()}
+            </p>
+            <p className="font-semibold">
+              <span className="text-gray-500 font-normal">Posted By: </span> {recruiter?.userName}
+            </p>
+            <p className="font-semibold">
+              <span className="text-gray-500 font-normal">Locations: </span> {job.locations.length > 0 ? job.locations.join(', ') : 'Not specified'}
+            </p>
+            <p className="font-semibold">
+              <span className="text-gray-500 font-normal">Deadline: </span>{new Date(job.deadline).toLocaleDateString()}
+            </p>
+            <p className="font-semibold">
+              <span className="text-gray-500 font-normal">Employment Type: </span> {job.employmentType}
+            </p>
+            <p className="font-semibold">
+              <span className="text-gray-500 font-normal">Industry: </span> {job.industry || 'Not specified'}
+            </p>
+            <p className="font-semibold">
+              <span className="text-gray-500 font-normal">Salary: </span> {job.salary || 'Not specified'}
+            </p>
+            <p className="font-semibold">
+              <span className="text-gray-500 font-normal">Work Experience: </span> {job.workExperienceMinYears}
+            </p>
+            <p className="font-semibold">
+              <span className="text-gray-500 font-normal">Remote: </span> {job.isRemote ? 'Yes' : 'No'}
+            </p>
+
+          </div>
+          <div className='h-0.5 bg-gray-200 w-full my-16 rounded-full'></div>
+          <div className="mb-10">
+            <h3 className="mb-6 text-lg font-semibold">Job Description</h3>
+            <p className='px-6'>{job.description}</p>
+          </div>
           {job.skillsRequired.length > 0 && (
-            <div className="mb-6">
-              <p className="text-gray-700">
-                <span className="font-semibold">Skills Required:</span> {job.skillsRequired.join(', ')}
-              </p>
+            <div className="mb-10">
+              <h3 className="mb-6 text-lg font-semibold">Skills Required</h3>
+              <div className='flex flex-wrap '>
+                {
+                  job.skillsRequired.map((skill) => (
+                    <span className="bg-gray-50  px-4 py-1.5 rounded-full mr-2">{skill}</span>
+                  ))
+                }
+              </div>
+
             </div>
           )}
-          <Button onClick={handleApplyJob}>Apply</Button>
+          <div className='mb-4'>
+            <Button onClick={handleApplyJob} className='bg-blue-700 px-6 rounded-none  hover:bg-blue-900 '>Apply</Button>
+          </div>
         </div>
       </div>
     </div>
