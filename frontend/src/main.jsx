@@ -25,7 +25,7 @@ import AdminDashboardJobs from './pages/AdminDashboardJobs';
 import AdminDashboardApplications from './pages/AdminDashboardApplications';
 import AdminDashboardSearch from './pages/AdminDashboardSearch';
 import AdminAccount from './pages/AdminAccount';
-
+import AboutUs from './pages/AboutUs';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -43,6 +43,7 @@ const router = createBrowserRouter(
         <Route path='/job-applications/:id' element={<JobApplications/>} />
         <Route path='/user-resume/:id' element={<UserResume/>} />
         <Route path='user-dashboard' element={<UserDashboard />} />
+        <Route path='/about-us' element={<AboutUs />} />
       </Route>
         <Route path='/admin/dashboard/search' element={<AdminDashboardSearch />} />
         <Route path='/admin/dashboard/users' element={<AdminDashboardUsers />} />

@@ -131,7 +131,7 @@ const JobDetails = () => {
           className="p-2 z-10 flex items-center text-lg"
         >
           <IoIosArrowBack className="text-xl text-gray-600"/>
-          <span className='cursor-pointer'>Show Similar Jobs</span>
+          <span className='cursor-pointer text-base text-blue-600'>Show Similar Jobs</span>
         </div>
       </div>
       <div className=" mx-auto bg-white shadow-md  overflow-hidden ">

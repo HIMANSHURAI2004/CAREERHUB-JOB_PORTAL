@@ -106,6 +106,7 @@ function Applications() {
             <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 ">
                 <div className="mx-auto grid w-full max-w-6xl gap-2">
                     <h1 className="text-3xl font-semibold text-gray-700 pb-2">My Applications</h1>
+                    <div className="h-[1.5px] bg-slate-700  w-full   lg:mb-5" ></div>
                 </div>
                 <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[250px_1fr] lg:grid-cols-[300px_1fr]">
                     <nav className="grid gap-4 text-sm text-gray-600">

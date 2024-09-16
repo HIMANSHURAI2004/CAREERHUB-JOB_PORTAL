@@ -1,13 +1,9 @@
 import { Link } from "react-router-dom"
 import {
-  Activity,
   ArrowUpRight,
   CircleUser,
-  CreditCard,
-  DollarSign,
   Menu,
   Package2,
-  Search,
   Users,
 } from "lucide-react"
 import { Building2 } from 'lucide-react';
@@ -16,7 +12,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -34,7 +29,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
   Table,

@@ -46,7 +46,7 @@ function UserResume() {
                 </div>
                 <div className="mx-auto w-full max-w-6xl ">
                     <Card className="shadow-lg w-full ">
-                        <CardHeader className="bg-blue-600 text-white rounded-t-md">
+                        <CardHeader className="bg-[#294f7c] text-white rounded-t-md">
                             <CardTitle className="lg:text-2xl md:text-2xl text-xl font-semibold">Resume Details</CardTitle>
                         </CardHeader>
                         <CardContent className="p-6">

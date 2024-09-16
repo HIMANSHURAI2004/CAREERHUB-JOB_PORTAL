@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import jobImage from './authbgimage.png';
 import logo from "./careerhublogo.png";
 import { Button } from "@/components/ui/button";
@@ -134,7 +134,7 @@ function Login() {
                                                 )}
                                             </div>
                                         </div>
-                                        <Button type="submit" className="w-full mt-2 bg-blue-600 hover:bg-blue-900" disabled={isLoading}>
+                                        <Button type="submit" className="w-full mt-2 bg-blue-600 hover:bg-blue-900 text-white" disabled={isLoading}>
                                             {isLoading ? (
                                                 <svg className="animate-spin h-5 w-5 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

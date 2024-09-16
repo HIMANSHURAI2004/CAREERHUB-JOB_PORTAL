@@ -86,8 +86,8 @@ const PostJob = () => {
 
   return (
     <div className="bg-gray-100 py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
-        <h2 className="text-2xl font-bold text-white py-4 px-6 text-center bg-blue-600">Post Job</h2>
+      <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+        <h2 className="text-2xl font-bold text-white py-4 px-6 text-center bg-[#294f7c]">Post Job</h2>
         <form onSubmit={handleSubmit} className="p-6">
           <div className="mb-4">
             <label htmlFor="title" className="block text-gray-700 font-semibold mb-2">

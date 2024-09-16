@@ -213,7 +213,7 @@ const deleteJob = asyncHandler(async (req, res) => {
 const getCompanyDetails = asyncHandler(async (req, res) => {
 
   const company = req.company;
-
+  console.log(company);
   if (!company) {
     throw new ApiError(404, "Company not found");
   }

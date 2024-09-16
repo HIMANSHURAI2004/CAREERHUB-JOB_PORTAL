@@ -106,7 +106,8 @@ function Resume() {
         <div className="flex min-h-screen w-full flex-col bg-gray-50">
             <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 ">
                 <div className="mx-auto grid w-full max-w-6xl gap-2 ">
-                    <h1 className="text-3xl font-semibold text-gray-700">Resume</h1>
+                    <h1 className="text-3xl font-semibold text-gray-700 mb-2">Resume</h1>
+                    <div className="h-[1.5px] bg-slate-700  w-full   lg:mb-5" ></div>
                 </div>
                 <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[250px_1fr] lg:grid-cols-[300px_1fr] ">
                     <nav className="grid gap-4 text-sm text-gray-600 ">
@@ -123,7 +124,7 @@ function Resume() {
                     <div className="mx-auto grid w-full max-w-6xl items-start gap-6">
                         <div className="grid gap-6">
                             <Card className="shadow-lg">
-                                <CardHeader className="bg-blue-600 text-white rounded-t-md">
+                                <CardHeader className="bg-[#294f7c] text-white rounded-t-md">
                                     <CardTitle className="text-2xl font-semibold">Resume Details</CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-6">

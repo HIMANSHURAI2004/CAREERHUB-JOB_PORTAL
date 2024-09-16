@@ -176,7 +176,7 @@ function AddResume() {
     return (
         <div className='flex items-center justify-center min-h-screen bg-gray-100 py-6'>
             <div className='bg-white rounded-lg shadow-md w-full max-w-4xl flex flex-col lg:flex-col'>
-                <h2 className='text-xl font-semibold py-2 rounded-t-lg bg-blue-700 text-white text-center md:text-2xl lg:text-2xl'>Create your Resume</h2>
+                <h2 className='text-xl font-semibold py-2 rounded-t-lg bg-[#294f7c] text-white text-center md:text-2xl lg:text-2xl'>Create your Resume</h2>
 
                 <div className=' p-8 rounded-lg shadow-md w-full max-w-4xl flex flex-col lg:flex-row'>
                     <div className='lg:w-1/4 lg:pr-8 mb-6 lg:mb-0 '>

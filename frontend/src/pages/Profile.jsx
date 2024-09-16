@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import profile from './profile.jpg';
 import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -27,6 +28,7 @@ import { Label } from "@radix-ui/react-label";
 function Profile() {
   const [userData, setUserData] = useState(null);
   const [image, setImage] = useState(null);
+  const { toast } = useToast();
   const [editData, setEditData] = useState({
     userName: "",
     contactNo: "",
@@ -57,25 +59,55 @@ function Profile() {
   useEffect(() => {
     getUserData();
   }, []);
-
-  async function handleImageUpload(e) {
+  
+  
+  const handleImageUpload = async (e) => {
     e.preventDefault();
+
+    // Ensure an image is selected
+    if (!image) {
+      console.error("No image selected");
+      return;
+    }
     const formData = new FormData();
-    formData.append("image", image);
+    formData.append("image", image); // Append the selected image to FormData
+    
     try {
       const response = await fetch("http://localhost:3000/api/v1/user/update-image", {
-        method: 'PATCH',
-        credentials: 'include',
-        body: formData,
+        method: "PATCH",
+        credentials: "include",
+        body: formData, // Send formData
       });
+
       const result = await response.json();
-      setUserData({ ...userData, image: result.data.image });
-      getUserData();
+      // console.log(result);
+
+      if (result.success) {
+        setUserData({ ...userData, image: result.data.image });
+        getUserData();
+        toast({
+          title: 'Success',
+          description: 'Image updated successfully',
+          status: 'success'
+        });
+      } else {
+        console.error("Error uploading image:", result.message);
+        toast({
+          title: 'Error',
+          description: 'Error uploading image:',
+          status: 'Error'
+        });
+      }
     } catch (error) {
       console.error("Error uploading image:", error);
     }
-  }
+  };
 
+  const handleImageChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setImage(selectedFile);
+  };
+  
   async function handleUpdateDetails(e) {
     e.preventDefault();
     try {
@@ -87,6 +119,11 @@ function Profile() {
         }
       );
       setUserData(response.data.data);
+      toast({
+        title: 'Success',
+        description: 'Details updated successfully',
+        status: 'success'
+      });
     } catch (error) {
       console.error("Error updating user details:", error);
     }
@@ -102,9 +139,10 @@ function Profile() {
         <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4">
           <div className="mx-auto grid w-full max-w-6xl gap-2">
             <h1 className="text-3xl font-semibold text-gray-700 pb-2">Profile</h1>
+            <div className="h-[1.5px] bg-slate-700  w-full   lg:mb-5" ></div>
           </div>
           <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[250px_1fr] lg:grid-cols-[300px_1fr]">
-            <nav className="grid gap-4 text-sm text-gray-600">
+            <nav className="grid gap-4 text-sm text-gray-600 ">
               <Link to="/profile" className="font-semibold text-blue-600">
                 General
               </Link>
@@ -121,7 +159,7 @@ function Profile() {
               )}
               <Link to="/account">Account</Link>
             </nav>
-            <div className="grid gap-6">
+            <div className="grid gap-6 ">
               <Card className="border rounded-lg shadow-lg">
                 <CardHeader className="bg-[#294f7c] text-white p-5 pl-6 flex rounded-t-lg">
                   <CardTitle className="text-2xl font-semibold text-white">
@@ -180,7 +218,7 @@ function Profile() {
                           <Input
                             id="image"
                             type="file"
-                            onChange={(e) => setImage(e.target.files[0])}
+                            onChange={handleImageChange}
                           />
                           <DialogFooter>
                             <Button type="submit">Upload</Button>

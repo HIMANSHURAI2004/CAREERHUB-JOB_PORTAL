@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import mongoose from "mongoose";
+import { User } from "../models/user.model.js";
 const createApplication = asyncHandler(async (req, res) => {
   const { id: jobId } = req.params; 
   const applicant = req.user._id;
@@ -14,6 +15,11 @@ const createApplication = asyncHandler(async (req, res) => {
   // }
 
   // console.log(jobId,applicant)
+  const user =await User.findById(applicant)
+  // console.log(user)
+  if (user.role !== "student") {
+    throw new ApiError(404, "You Can Not Apply For this Job");
+  }
 
   const job = await Job.findById(jobId);
   if (!job) {

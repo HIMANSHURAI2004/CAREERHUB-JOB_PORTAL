@@ -299,43 +299,34 @@ const updateUser = asyncHandler(async (req, res) => {
     )
 })
 
+
 //Update image
 const updateImage = asyncHandler(async (req, res) => {
-  // const imageLocalPath = req.file?.path;
-  const imageLocalPath = req.files?.image?.[0]?.path;
-  // console.log(imageLocalPath)
+  const imageLocalPath = req.file?.path; // Since we're using upload.single(), req.file will contain the image.
 
+  // Check if the image file was uploaded
   if (!imageLocalPath) {
-    throw new ApiError(400, "image file is missing")
+    throw new ApiError(400, "Image file is missing");
   }
 
-  const image = await uploadOnCloudinary(imageLocalPath)
+  // Upload the image to Cloudinary (or any cloud service)
+  const image = await uploadOnCloudinary(imageLocalPath); // Assuming uploadOnCloudinary returns an object with a "url"
 
   if (!image.url) {
-    throw new ApiError(400, "Error while uploading image")
+    throw new ApiError(400, "Error while uploading image");
   }
 
+  // Update the user's image URL in the database
   const user = await User.findByIdAndUpdate(
     req.user._id,
-    {
-      $set: {
-        image: image.url
-      }
-    },
-    {
-      new: true
-    }
-  ).select(
-    "-password"
-  )
+    { $set: { image: image.url } },
+    { new: true }
+  ).select("-password");
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(200, user, "Image updated successfully")
-    )
-
-})
+  return res.status(200).json(
+    new ApiResponse(200, user, "Image updated successfully")
+  );
+});
 
 //Delete User
 const deleteUser = asyncHandler(async (req, res) => {
