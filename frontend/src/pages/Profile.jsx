@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import profile from '../../assests/profile.jpg';
+import profile from '../../assets/profile.jpg';
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -34,11 +34,10 @@ function Profile() {
     contactNo: "",
   });
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   async function getUserData() {
     try {
-      const response = await fetch("http://localhost:3000/api/v1/user/get-user", {
+      const response = await fetch(`http://localhost:3000/api/v1/user/get-user`, {
         method: "GET",
         credentials: "include",
       });
@@ -64,23 +63,21 @@ function Profile() {
   const handleImageUpload = async (e) => {
     e.preventDefault();
 
-    // Ensure an image is selected
     if (!image) {
       console.error("No image selected");
       return;
     }
     const formData = new FormData();
-    formData.append("image", image); // Append the selected image to FormData
+    formData.append("image", image); 
     
     try {
-      const response = await fetch("http://localhost:3000/api/v1/user/update-image", {
+      const response = await fetch(`http://localhost:3000/api/v1/user/update-image`, {
         method: "PATCH",
         credentials: "include",
-        body: formData, // Send formData
+        body: formData, 
       });
 
       const result = await response.json();
-      // console.log(result);
 
       if (result.success) {
         setUserData({ ...userData, image: result.data.image });
@@ -112,7 +109,7 @@ function Profile() {
     e.preventDefault();
     try {
       const response = await axios.patch(
-        "http://localhost:3000/api/v1/user/update-user",
+        `http://localhost:3000/api/v1/user/update-user`,
         editData,
         {
           withCredentials: true,

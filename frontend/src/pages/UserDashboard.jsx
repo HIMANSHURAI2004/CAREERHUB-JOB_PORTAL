@@ -18,18 +18,18 @@ const Spinner = () => (
 );
 
 const imagePaths = [
-  '../../assests/jobtype/data_science.png',
-  '../../assests/jobtype/android.png',
-  '../../assests/jobtype/digital_marketing.png',
-  '../../assests/jobtype/fullstack.png',
-  '../../assests/jobtype/generativeai.png',
-  '../../assests/jobtype/machine_learning.png',
-  '../../assests/jobtype/product-management.png',
-  '../../assests/jobtype/programming.png',
-  '../../assests/jobtype/promptai.png',
-  '../../assests/jobtype/python.png',
-  '../../assests/jobtype/uiux.png',
-  '../../assests/jobtype/web_development.png',
+  '../../assets/jobtype/data_science.png',
+  '../../assets/jobtype/android.png',
+  '../../assets/jobtype/digital_marketing.png',
+  '../../assets/jobtype/fullstack.png',
+  '../../assets/jobtype/generativeai.png',
+  '../../assets/jobtype/machine_learning.png',
+  '../../assets/jobtype/product-management.png',
+  '../../assets/jobtype/programming.png',
+  '../../assets/jobtype/promptai.png',
+  '../../assets/jobtype/python.png',
+  '../../assets/jobtype/uiux.png',
+  '../../assets/jobtype/web_development.png',
 ];
 
 const UserDashboard = () => {
@@ -197,7 +197,6 @@ const JobCard = ({ job, onClick }) => {
     workExperienceMinYears,
   } = job;
 
-  // Randomly select an image for each job
   const randomIndex = Math.floor(Math.random() * imagePaths.length);
   const randomImage = imagePaths[randomIndex];
 

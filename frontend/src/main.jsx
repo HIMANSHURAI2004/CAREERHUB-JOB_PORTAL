@@ -47,16 +47,17 @@ const router = createBrowserRouter(
         <Route path='user-dashboard' element={<UserDashboard />} />
         <Route path='/about-us' element={<AboutUs />} />
       </Route>
+
         <Route path='/admin/dashboard/search' element={<AdminDashboardSearch />} />
         <Route path='/admin/dashboard/users' element={<AdminDashboardUsers />} />
         <Route path='/admin/dashboard/jobs' element={<AdminDashboardJobs />} />
         <Route path='/admin/dashboard/applications' element={<AdminDashboardApplications />} />
         <Route path="/admin/account" element={<AdminAccount/>} />
 
-      <Route path='/signup' element={<SignUp />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/admin/dashboard' element={<Dashboard/>} />
-      <Route path='/forgot-password'element={<ForgotPassword/>}></Route>
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/admin/dashboard' element={<Dashboard/>} />
+        <Route path='/forgot-password'element={<ForgotPassword/>} />
     </>
   )
 );

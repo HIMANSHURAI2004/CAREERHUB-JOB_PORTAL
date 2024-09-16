@@ -59,7 +59,7 @@ function Dashboard() {
   const getDashboardData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/v1/user/get-all-counts', {
+      const response = await fetch(`http://localhost:3000/api/v1/user/get-all-counts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ function Dashboard() {
       });
       if (!response.ok) {
         throw new Error('Failed to fetch count');
-      };
+      }
 
       const responseData = await response.json();
       setCountData(responseData.data);
@@ -89,7 +89,7 @@ function Dashboard() {
   const getUserData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/v1/user/admin-dashboard', {
+      const response = await fetch(`http://localhost:3000/api/v1/user/admin-dashboard`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ function Dashboard() {
   const getJobsData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/v1/user/admin-dashboard', {
+      const response = await fetch(`http://localhost:3000/api/v1/user/admin-dashboard`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +126,6 @@ function Dashboard() {
       }
 
       const responseData = await response.json();
-      // console.log(responseData.data);
       setJobEntries(responseData.data.slice(0, 5));
     } catch (error) {
       setErrorMessage(error.message || 'Failed to fetch entries');
@@ -137,7 +136,7 @@ function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/v1/user/logout', {
+      const response = await fetch(`http://localhost:3000/api/v1/user/logout`, {
         method: 'POST',
         credentials: 'include',
         headers: {

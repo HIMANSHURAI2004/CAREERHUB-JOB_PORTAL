@@ -44,7 +44,6 @@ function JobApplications() {
         throw new Error('Failed to fetch applications');
       }
       const responseData = await response.json();
-      console.log(responseData);
       setApplications(responseData.data);
     } catch (error) {
       console.error('Error fetching applications:', error);
@@ -72,7 +71,6 @@ function JobApplications() {
         throw new Error('Failed to update status');
       }
 
-      const responseData = await response.json();
       toast({
         title: 'Success',
         description: 'Status updated successfully',

@@ -2,7 +2,7 @@ import  { useEffect } from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import profile from '../../assests/profile.jpg'
+import profile from '../../assets/profile.jpg'
 import {
     Avatar,
     AvatarFallback,
@@ -36,7 +36,6 @@ function Navbar() {
                 const userData = await response.json();
                 setIsLoggedIn(true);
                 setUserData(userData);
-                // console.log('User data:', userData);
             } else {
                 setIsLoggedIn(false);
                 setUserData(null);
@@ -103,7 +102,6 @@ function Navbar() {
               )
             }
             <a href="about-us" className="text-white hover:text-black">About us</a>
-            {/* <a href="post-job" className="text-white hover:text-black">Post a Job</a> */}
           </nav>
         </div>
         {

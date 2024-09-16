@@ -74,54 +74,6 @@ const getRecruiterJobs = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
 });
 
-// const getJobs = asyncHandler(async (req, res) => {
-//   const query = req.query;
-
-//   if (query.company) {
-//     const company = await Company.findOne({ companyName: query.company });
-//     query.company = company._id;
-//   }
-//   if (query.postedBy) {
-//     const postedBy = await User.findOne({ userName: query.postedBy });
-//     query.postedBy = postedBy._id;
-//   }
-
-//   const jobs = await Job.aggregate([
-//     { $match: query },
-//     {
-//       $lookup: {
-//         from: 'companies',
-//         localField: 'company',
-//         foreignField: '_id',
-//         as: 'company'
-//       }
-//     },
-//     {
-//       $lookup: {
-//         from: 'users',
-//         localField: 'postedBy',
-//         foreignField: '_id',
-//         as: 'postedBy'
-//       }
-//     },
-//     {
-//       $project: {
-//         __v: 0,
-//         'company.__v': 0,
-//         'postedBy.__v': 0,
-//         'postedBy.password': 0,
-//         'postedBy.refreshToken': 0,
-//       }
-//     }
-//   ]);
-
-//   if (jobs.length === 0) {
-//     return res.status(200).json(new ApiResponse(200, jobs, "No jobs found based on this search"));
-//   }
-
-//   return res.status(200).json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
-// });
-
 const getJobs = asyncHandler(async (req, res) => {
   const query = req.query;
 

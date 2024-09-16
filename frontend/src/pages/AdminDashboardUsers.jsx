@@ -31,7 +31,7 @@ function AdminDashboardUsers() {
     const getUserData = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:3000/api/v1/user/admin-dashboard', {
+            const response = await fetch(`http://localhost:3000/api/v1/user/admin-dashboard`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ function AdminDashboardUsers() {
 
     const handleLogout = async () => {
         try {
-          const response = await fetch('http://localhost:3000/api/v1/user/logout', {
+          const response = await fetch(`http://localhost:3000/api/v1/user/logout`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -120,7 +120,7 @@ function AdminDashboardUsers() {
                         Applications
                     </Link>
                     <Link
-                        to="/admin/dashboard/analytics"
+                        to="#"
                         className=" transition-colors hover:text-foreground"
                     >
                         Analytics
@@ -174,7 +174,7 @@ function AdminDashboardUsers() {
                                 Applications
                             </Link>
                             <Link
-                                to="/admin/dashboard/analytics"
+                                to="#"
                                 className="hover:text-foreground"
                             >
                                 Analytics
@@ -196,7 +196,7 @@ function AdminDashboardUsers() {
                                 <Link to='/admin/account'>Account</Link>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Logout</DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

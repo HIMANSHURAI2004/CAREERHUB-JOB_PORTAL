@@ -8,7 +8,7 @@ const app = express();
 dotenv.config()
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Frontend URL
+    origin: process.env.FRONTEND_URL, // Frontend URL
     credentials: true,
     optionsSuccessStatus: 200,
 }))
@@ -38,6 +38,5 @@ app.use((err, req, res, next) => {
      res.status(500).json({ message: "Internal Server Error" });
   });
   
-
 
 export {app}

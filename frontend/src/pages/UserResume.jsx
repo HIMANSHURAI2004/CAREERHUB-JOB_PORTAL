@@ -28,7 +28,6 @@ function UserResume() {
                     throw new Error('Failed to fetch resume data');
                 }
                 const responseData = await response.json();
-                console.log(responseData);
                 setResumeData(responseData.data);
             } catch (error) {
                 console.error('Error fetching resume data:', error);

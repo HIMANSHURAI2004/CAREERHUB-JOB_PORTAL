@@ -18,17 +18,17 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+
+
 function Applications() {
     const [applications, setApplications] = useState([]);
     const { toast } = useToast();
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
 
     async function fetchApplications() {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:3000/api/v1/application/get-user-applications', {
+            const response = await fetch(`http://localhost:3000/api/v1/application/get-user-applications`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,7 +39,6 @@ function Applications() {
                 throw new Error('Failed to fetch applications');
             }
             const responseData = await response.json();
-            // console.log(responseData.data);
             setApplications(responseData.data);
         } catch (error) {
             console.error('Error fetching applications:', error);
@@ -70,7 +69,6 @@ function Applications() {
                 })
                 fetchApplications();
                 setApplications(applications.filter(application => application._id !== id));
-                // navigate('/applications');
             }
         } catch (error) {
             console.error('Error deleting Application:', error);

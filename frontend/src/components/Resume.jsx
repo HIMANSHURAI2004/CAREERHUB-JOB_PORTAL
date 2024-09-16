@@ -1,6 +1,3 @@
-
-
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -51,11 +48,11 @@ function Resume() {
     
     async function fetchResumeData() {
         try {
-            const response = await axios.get('http://localhost:3000/api/v1/user/get-resume', {
+            const response = await axios.get(`http://localhost:3000/api/v1/user/get-resume`, {
                 withCredentials: true,
             });
             setResumeData(response.data.data);
-            setEditData(response.data.data); // Set initial edit data
+            setEditData(response.data.data); 
         } catch (error) {
             console.error('Error fetching resume data:', error);
         }
@@ -76,15 +73,14 @@ function Resume() {
     async function handleUpdateResume(e) {
         e.preventDefault();
         const cleanedData = cleanEditData(editData);
-        console.log(cleanedData);
 
         try {
-            const response = await axios.patch('http://localhost:3000/api/v1/user/update-resume', cleanedData, {
+            const response = await axios.patch(`http://localhost:3000/api/v1/user/update-resume`, cleanedData, {
                 withCredentials: true,
             });
-            console.log(response);
+
             setResumeData(response.data.data);
-            setIsEditing(false); // Switch back to view mode
+            setIsEditing(false); 
         } catch (error) {
             console.error('Error updating resume details:', error);
         }
@@ -92,10 +88,10 @@ function Resume() {
 
     async function handleDeleteResume() {
         try {
-            await axios.delete('http://localhost:3000/api/v1/user/delete-resume', {
+            await axios.delete(`http://localhost:3000/api/v1/user/delete-resume`, {
                 withCredentials: true,
             });
-            setResumeData(null); // or redirect to another page
+            setResumeData(null); 
             fetchResumeData();
         } catch (error) {
             console.error('Error deleting resume:', error);
@@ -118,9 +114,7 @@ function Resume() {
                         <Link to="/applications">Applications</Link>
                         <Link to="/account">Account</Link>
                     </nav>
-                    {/* <div className="mx-auto grid w-full max-w-6xl gap-2">
-                        <h1 className="text-4xl font-bold text-gray-900">Resume</h1>
-                    </div> */}
+                    
                     <div className="mx-auto grid w-full max-w-6xl items-start gap-6">
                         <div className="grid gap-6">
                             <Card className="shadow-lg">

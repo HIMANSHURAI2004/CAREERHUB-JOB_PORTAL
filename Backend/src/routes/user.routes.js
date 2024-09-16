@@ -3,16 +3,13 @@ import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getC
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/user.middleware.js";
 
-
-
-
 const router = Router()
 
 router.route("/preRegisterValidation").post(preRegisterUserValidation)
 router.route("/sendRegisterOTP").post(sendOTP)
 router.route("/register").post(upload.fields([
     {
-        name : "image",//name should be same as frontend
+        name : "image",
         maxCount : 1,
     }
 ]),registerUser);

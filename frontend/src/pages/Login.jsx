@@ -1,6 +1,6 @@
 import  { useState } from 'react';
-import jobImage from '../../assests/authbgimage.png';
-import logo from "../../assests/careerhublogo.png";
+import jobImage from '../../assets/authbgimage.png';
+import logo from "../../assets/careerhublogo.png";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -41,12 +41,10 @@ function Login() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:3000/api/v1/user/login', formData, {
+            const response = await axios.post(`http://localhost:3000/api/v1/user/login`, formData, {
                 withCredentials: true,
             });
 
-            console.log(response)
-            
             if (response.data.statusCode >= 400) {
                 throw new Error(response.data?.message || 'Failed to Login');
             }

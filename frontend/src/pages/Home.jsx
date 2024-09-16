@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import company from "../../assests/company.png";
+import company from "../../assets/company.png";
 import TypingEffect from "@/components/TypingEffect";
-import bg from "../../assests/footer.png";
+import bg from "../../assets/footer.png";
 import { IoIosSearch } from "react-icons/io";
+
 // Existing categories and jobs data
 const categories = [
   {
@@ -122,7 +123,7 @@ function Home() {
     const fetchCurrentUser = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/v1/user/get-user",
+          `http://localhost:3000/api/v1/user/get-user`,
           {
             method: "GET",
             credentials: "include",
@@ -136,7 +137,6 @@ function Home() {
           const userData = await response.json();
           setIsLoggedIn(true);
           setUserData(userData);
-          // console.log('User data:', userData);
         } else {
           setIsLoggedIn(false);
           setUserData(null);
@@ -194,7 +194,6 @@ function Home() {
           </button>
         </div>
 
-        {/* <a href="#" className="text-blue-600 hover:underline mt-4 block">Advanced search</a> */}
       </div>
       <div>
         <div className="text-3xl font-bold text-center pt-28 pb-4">
@@ -366,7 +365,6 @@ function Home() {
               >
                 <div>
                   <h3 className="text-lg font-semibold">{job.title}</h3>
-                  {/* <p className="text-gray-500">{job.time}</p> */}
                   <p className="text-gray-500">{job.companyName}</p>
                   <div className="flex justify-between mt-2">
                     <p className="text-gray-500">

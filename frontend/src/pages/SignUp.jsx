@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useState } from 'react';
-import jobImage from '../../assests/authbgimage.png';
-import logo from "../../assests/careerhublogo.png";
+import jobImage from '../../assets/authbgimage.png';
+import logo from "../../assets/careerhublogo.png";
 import { useNavigate } from "react-router-dom";
 import {
     Select,
@@ -74,7 +74,7 @@ function SignUp() {
         }
 
         try {
-            const response1 = await fetch('http://localhost:3000/api/v1/user/preRegisterValidation', {
+            const response1 = await fetch(`http://localhost:3000/api/v1/user/preRegisterValidation`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,40 +87,32 @@ function SignUp() {
                     role : formData.role
                 }),
             });
-            console.log("response1",response1)
 
             if (!response1.ok) {
                 const errorData = await response1.json();
                 throw new Error(errorData.message || 'Failed to register user');
             }
-            const responseData = await response1.json();
-            // console.log(responseData)
+            // const responseData = await response1.json();
         } catch (error) {
             setErrorMessage(error.message || 'Failed to register user');
             setIsLoading(false)
             return;
         }
 
-            // console.log(response1.data)
-            // console.log('done')
-
             try {
-                const response2 = await fetch('http://localhost:3000/api/v1/user/sendRegisterOTP',{
+                const response2 = await fetch(`http://localhost:3000/api/v1/user/sendRegisterOTP`,{
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                      body: JSON.stringify({ email: formData.email }),
                 });
-                console.log("response2",response2)
                 if (!response2.ok) {
                     const errorData = await response2.json();
                     throw new Error(errorData.message || 'Failed to register user');
                 }
                 const responseData = await response2.json();
-                console.log("response2",responseData)
                 setOtpToken(responseData.data);
-                 // console.log("otptoken",otpToken)
                 setIsLoading(false)
                 setStep(2);
             } catch (error) {
@@ -128,7 +120,6 @@ function SignUp() {
                 setIsLoading(false)
                 return;
             }
-            // console.log(response2.data.data)
 
     };
 
@@ -138,22 +129,6 @@ function SignUp() {
         e.preventDefault();
 
         try {
-            // const formDataToSend = new FormData();
-            // for (const key in formData) {
-            //     if(formData[key]){
-            //         formDataToSend.append(key, formData[key]);
-            //     }
-            // }
-            // formDataToSend.append('otp', otp);
-            // formDataToSend.append('otpToken', otpToken);
-
-            // console.log(formData)
-            // for (let pair of formDataToSend.entries()) {
-            //     console.log(pair[0]+ ', ' + pair[1]); 
-            // }
-            // console.log(otp)
-            // console.log(otpToken)
-
             const formDataToSend = new FormData();
             formDataToSend.append('email', formData.email);
             formDataToSend.append('password', formData.password);
@@ -167,12 +142,10 @@ function SignUp() {
             formDataToSend.append('otpToken', otpToken);
             formDataToSend.append('image', formData.image);
 
-            const response = await fetch('http://localhost:3000/api/v1/user/register', {
+            const response = await fetch(`http://localhost:3000/api/v1/user/register`, {
                 method: 'POST',
                 body: formDataToSend
             });
-
-            console.log("response3",response)
 
             if (!response.ok) {
                 const errorData = await response.json();
