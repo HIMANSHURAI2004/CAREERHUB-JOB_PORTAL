@@ -24,7 +24,7 @@ function Navbar() {
   useEffect(() => {
     const fetchCurrentUser = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/v1/user/get-user', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/get-user`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -62,7 +62,7 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-        const response = await fetch('http://localhost:3000/api/v1/user/logout', {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -107,7 +107,6 @@ function Navbar() {
         {
           isLoggedIn ? (
             <div className="flex space-x-4" >
-              {/* <button onClick={handleLogout} className="px-4 py-2 bg-black text-white rounded-md">Log Out</button> */}
             </div>
           ) : (
             <div className="flex space-x-4" >

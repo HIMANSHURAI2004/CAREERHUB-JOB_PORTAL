@@ -74,7 +74,7 @@ function SignUp() {
         }
 
         try {
-            const response1 = await fetch(`http://localhost:3000/api/v1/user/preRegisterValidation`, {
+            const response1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/preRegisterValidation`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ function SignUp() {
         }
 
             try {
-                const response2 = await fetch(`http://localhost:3000/api/v1/user/sendRegisterOTP`,{
+                const response2 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/sendRegisterOTP`,{
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ function SignUp() {
             formDataToSend.append('otpToken', otpToken);
             formDataToSend.append('image', formData.image);
 
-            const response = await fetch(`http://localhost:3000/api/v1/user/register`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/register`, {
                 method: 'POST',
                 body: formDataToSend
             });

@@ -27,6 +27,8 @@ import AdminDashboardJobs from './pages/AdminDashboardJobs';
 import AdminDashboardApplications from './pages/AdminDashboardApplications';
 import AdminDashboardSearch from './pages/AdminDashboardSearch';
 import AdminAccount from './pages/AdminAccount';
+
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>

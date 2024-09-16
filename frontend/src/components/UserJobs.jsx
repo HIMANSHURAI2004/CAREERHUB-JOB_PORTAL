@@ -30,7 +30,7 @@ function UserJobs() {
     async function fetchUserJobs() {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:3000/api/v1/job/get-recruiter-jobs`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/job/get-recruiter-jobs`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ function UserJobs() {
     const handleDeleteJob = async (id) => {
         try {
             setLoading(true);
-            const response = await axios.delete(`http://localhost:3000/api/v1/job/delete-job/${id}`, {
+            const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/job/delete-job/${id}`, {
                 withCredentials: true,
             });
             if (!response?.data?.success) {
@@ -101,7 +101,7 @@ function UserJobs() {
         e.preventDefault();
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:3000/api/v1/job/update-job/${editingJobId}`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/job/update-job/${editingJobId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

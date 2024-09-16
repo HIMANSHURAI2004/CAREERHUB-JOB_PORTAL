@@ -16,21 +16,21 @@ const JobDetails = () => {
   useEffect(() => {
     const fetchJobAndRecruiter = async () => {
       try {
-        const jobResponse = await fetch(`http://localhost:3000/api/v1/job/get-job/${id}`);
+        const jobResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/job/get-job/${id}`);
         if (!jobResponse.ok) {
           throw new Error('Job not found');
         }
         const jobData = await jobResponse.json();
         setJob(jobData.data);
 
-        const recruiterResponse = await fetch(`http://localhost:3000/api/v1/user/get-user-from-id/${jobData.data.postedBy}`);
+        const recruiterResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/get-user-from-id/${jobData.data.postedBy}`);
         if (!recruiterResponse.ok) {
           throw new Error('Recruiter not found');
         }
         const recruiterData = await recruiterResponse.json();
         setRecruiter(recruiterData.data);
 
-        const companyResponse = await fetch(`http://localhost:3000/api/v1/job/get-company-details-by-id/${jobData.data.company}`);
+        const companyResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/job/get-company-details-by-id/${jobData.data.company}`);
         if (!companyResponse.ok) {
           throw new Error('Company not found');
         }
@@ -50,7 +50,7 @@ const JobDetails = () => {
 
   const handleApplyJob = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/application/create-application/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/application/create-application/${id}`, {
         method: 'POST',
         credentials: 'include',
         headers: {

@@ -120,7 +120,7 @@ function AddResume() {
     
         try {
     
-            const response = await fetch(`http://localhost:3000/api/v1/user/add-resume`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/add-resume`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

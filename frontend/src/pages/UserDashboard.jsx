@@ -59,7 +59,7 @@ const UserDashboard = () => {
         queryParams.append('search', searchTerm);
       }
 
-      const response = await fetch(`http://localhost:3000/api/v1/job/search-jobs`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/job/search-jobs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

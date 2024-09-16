@@ -50,7 +50,7 @@ const PostJob = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/job/create-job`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/job/create-job`, {
         method: 'POST',
         credentials: 'include',
         headers: {

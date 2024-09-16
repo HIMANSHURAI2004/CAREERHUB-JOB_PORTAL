@@ -16,7 +16,7 @@ function UserResume() {
     useEffect(() => {
         async function fetchResumeData() {
             try {
-                const response = await fetch(`http://localhost:3000/api/v1/user/get-applicant-resume/${id}`, {
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/get-applicant-resume/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

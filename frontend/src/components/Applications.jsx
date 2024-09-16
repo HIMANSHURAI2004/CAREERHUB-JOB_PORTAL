@@ -28,7 +28,7 @@ function Applications() {
     async function fetchApplications() {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:3000/api/v1/application/get-user-applications`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/application/get-user-applications`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ function Applications() {
     const handleDeleteApplication = async (id) => {
         try {
             setLoading(true);
-            const response = await axios.delete(`http://localhost:3000/api/v1/application/delete-application/${id}`, {
+            const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/application/delete-application/${id}`, {
                 withCredentials: true,
             });
             if (!response?.data?.success) {

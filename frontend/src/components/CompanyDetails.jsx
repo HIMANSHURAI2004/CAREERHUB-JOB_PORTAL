@@ -32,7 +32,7 @@ function CompanyDetails() {
 
     async function getCompanyDetails() {
         try {
-            const response = await fetch(`http://localhost:3000/api/v1/job/get-company-details`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/job/get-company-details`, {
                 method: "GET",
                 credentials: "include",
             });
@@ -61,7 +61,7 @@ function CompanyDetails() {
     async function handleUpdateDetails(e) {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:3000/api/v1/user/update-company-details`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/update-company-details`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

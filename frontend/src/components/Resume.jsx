@@ -48,7 +48,7 @@ function Resume() {
     
     async function fetchResumeData() {
         try {
-            const response = await axios.get(`http://localhost:3000/api/v1/user/get-resume`, {
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/get-resume`, {
                 withCredentials: true,
             });
             setResumeData(response.data.data);
@@ -75,7 +75,7 @@ function Resume() {
         const cleanedData = cleanEditData(editData);
 
         try {
-            const response = await axios.patch(`http://localhost:3000/api/v1/user/update-resume`, cleanedData, {
+            const response = await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/user/update-resume`, cleanedData, {
                 withCredentials: true,
             });
 
@@ -88,7 +88,7 @@ function Resume() {
 
     async function handleDeleteResume() {
         try {
-            await axios.delete(`http://localhost:3000/api/v1/user/delete-resume`, {
+            await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/user/delete-resume`, {
                 withCredentials: true,
             });
             setResumeData(null); 

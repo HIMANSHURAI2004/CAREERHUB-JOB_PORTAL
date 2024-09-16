@@ -53,7 +53,7 @@ function AdminDashboardSearch() {
     const fetchEntries = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`http://localhost:3000/api/v1/user/admin-dashboard`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/admin-dashboard`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ function AdminDashboardSearch() {
     const fetchCount = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`http://localhost:3000/api/v1/user/count-entries`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/count-entries`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ function AdminDashboardSearch() {
     const handleDelete = async (entryId) => {
         setIsLoading(true);
         try {
-            const response = await fetch(`http://localhost:3000/api/v1/user/admin-delete`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/admin-delete`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -179,7 +179,7 @@ function AdminDashboardSearch() {
 
     const handleLogout = async () => {
         try {
-          const response = await fetch(`http://localhost:3000/api/v1/user/logout`, {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {
             method: 'POST',
             credentials: 'include',
             headers: {

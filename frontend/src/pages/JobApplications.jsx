@@ -33,7 +33,7 @@ function JobApplications() {
   async function fetchJobApplications() {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/v1/application/get-job-applications/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/application/get-job-applications/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ function JobApplications() {
 
   const handleStatusChange = async (applicationId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/application/update-application-status/${applicationId}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/application/update-application-status/${applicationId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

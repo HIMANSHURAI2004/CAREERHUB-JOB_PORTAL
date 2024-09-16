@@ -93,7 +93,7 @@ function Home() {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/job/get-jobs`,
+        `${import.meta.env.VITE_BACKEND_URL}/job/get-jobs`,
         {
           method: "GET",
           body: JSON.stringify(),
@@ -123,7 +123,7 @@ function Home() {
     const fetchCurrentUser = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/v1/user/get-user`,
+          `${import.meta.env.VITE_BACKEND_URL}/user/get-user`,
           {
             method: "GET",
             credentials: "include",

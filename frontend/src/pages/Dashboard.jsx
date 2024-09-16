@@ -59,7 +59,7 @@ function Dashboard() {
   const getDashboardData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/user/get-all-counts`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/get-all-counts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ function Dashboard() {
   const getUserData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/user/admin-dashboard`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/admin-dashboard`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ function Dashboard() {
   const getJobsData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/user/admin-dashboard`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/admin-dashboard`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/user/logout`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {
         method: 'POST',
         credentials: 'include',
         headers: {

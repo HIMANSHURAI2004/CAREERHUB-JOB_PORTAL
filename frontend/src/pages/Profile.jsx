@@ -37,7 +37,7 @@ function Profile() {
 
   async function getUserData() {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/user/get-user`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/get-user`, {
         method: "GET",
         credentials: "include",
       });
@@ -71,7 +71,7 @@ function Profile() {
     formData.append("image", image); 
     
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/user/update-image`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/update-image`, {
         method: "PATCH",
         credentials: "include",
         body: formData, 
@@ -109,7 +109,7 @@ function Profile() {
     e.preventDefault();
     try {
       const response = await axios.patch(
-        `http://localhost:3000/api/v1/user/update-user`,
+        `${import.meta.env.VITE_BACKEND_URL}/user/update-user`,
         editData,
         {
           withCredentials: true,

@@ -30,7 +30,7 @@ function AdminDashboardJobs() {
     const getJobsData = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`http://localhost:3000/api/v1/user/admin-dashboard`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/admin-dashboard`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ function AdminDashboardJobs() {
 
     const handleLogout = async () => {
         try {
-          const response = await fetch(`http://localhost:3000/api/v1/user/logout`, {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {
             method: 'POST',
             credentials: 'include',
             headers: {

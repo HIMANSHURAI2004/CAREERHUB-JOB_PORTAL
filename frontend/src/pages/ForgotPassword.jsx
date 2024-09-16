@@ -30,7 +30,7 @@ const ForgotPassword = () => {
         setErrorMessage('');
         setIsLoading(true);
         try {
-            const response = await axios.post(`http://localhost:3000/api/v1/user/forgot-password`, { email });
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/forgot-password`, { email });
             setOtpToken(response.data.otpToken);
             setStep(2);
         } catch (error) {
@@ -45,7 +45,7 @@ const ForgotPassword = () => {
         setErrorMessage('');
         setIsLoading(true);
         try {
-            await axios.post(`http://localhost:3000/api/v1/user/verify-otp`, { email, otp, otpToken });
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/verify-otp`, { email, otp, otpToken });
             setStep(3);
         } catch (error) {
             console.error("Error verifying OTP:", error);
@@ -67,7 +67,7 @@ const ForgotPassword = () => {
         setErrorMessage('');
         setIsLoading(true);
         try {
-            const response = await axios.post(`http://localhost:3000/api/v1/user/reset-password`, { newPassword }, {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/reset-password`, { newPassword }, {
                 headers: { Authorization: `Bearer ${otpToken}` }
             });
             alert(response.data.message);

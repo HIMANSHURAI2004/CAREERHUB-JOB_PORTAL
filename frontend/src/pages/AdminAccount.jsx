@@ -58,7 +58,7 @@ function AdminAccount() {
     
     async function getUserData() {
         try {
-            const response = await fetch(`http://localhost:3000/api/v1/user/get-user`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/get-user`, {
                 method: "GET",
                 credentials: "include",
             });
@@ -80,7 +80,7 @@ function AdminAccount() {
         formData['oldPassword'] = oldPassword;
         formData['newPassword'] = newPassword;
         try {
-            const response = await fetch(`http://localhost:3000/api/v1/user/change-password`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/change-password`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ function AdminAccount() {
     }
     const handleDeleteAccount = async () => {
         try {
-            const response = await axios.delete(`http://localhost:3000/api/v1/user/delete-user`, {
+            const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/user/delete-user`, {
                 withCredentials: true,
             });
 
@@ -131,7 +131,7 @@ function AdminAccount() {
 
     const handleLogout = async () => {
         try {
-          const response = await fetch(`http://localhost:3000/api/v1/user/logout`, {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {
             method: 'POST',
             credentials: 'include',
             headers: {
