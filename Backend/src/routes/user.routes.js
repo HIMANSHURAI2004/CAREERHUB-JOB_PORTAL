@@ -1,10 +1,12 @@
 import {Router} from "express";
-import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken, deleteEntry, countEntriesOfModel, getResumeById} from "../controllers/auth.controller.js"
+import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getCurrentUser, getResumeDetails, loginUser, logoutUser, registerUser, updateCompanyDetails, updateImage, updateResume, updateUser, getAllEntriesOfModel, refreshAccessToken, deleteEntry, countEntriesOfModel, getResumeById, forgotPassword, verifyOTP, resetPassword, preRegisterUserValidation, sendOTP} from "../controllers/auth.controller.js"
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/user.middleware.js";
 
 const router = Router()
 
+router.route("/preRegisterValidation").post(preRegisterUserValidation)
+router.route("/sendRegisterOTP").post(sendOTP)
 router.route("/register").post(upload.fields([
     {
         name : "image",//name should be same as frontend
@@ -46,6 +48,10 @@ router.route("/delete-resume").delete(verifyJWT,deleteResume);
 router.route("/admin-dashboard").post(verifyJWT,getAllEntriesOfModel)
 router.route("/count-entries").post(verifyJWT,countEntriesOfModel)
 router.route("/admin-delete").delete(verifyJWT,deleteEntry)
+
+router.route("/forgot-password").post(forgotPassword);
+router.route("/verify-otp").post(verifyOTP)
+router.route("/reset-password").post(resetPassword)
 
 
 export default router

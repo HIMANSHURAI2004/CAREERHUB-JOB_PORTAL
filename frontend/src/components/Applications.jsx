@@ -40,7 +40,7 @@ function Applications() {
                 throw new Error('Failed to fetch applications');
             }
             const responseData = await response.json();
-            console.log(responseData.data);
+            // console.log(responseData.data);
             setApplications(responseData.data);
         } catch (error) {
             console.error('Error fetching applications:', error);

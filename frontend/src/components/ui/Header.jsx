@@ -1,32 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import logo from '../../pages/career-hub-logo-white.png';
-import profile from './profile.jpg'
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import profile from './profile.jpg';
 import {
     Avatar,
     AvatarFallback,
     AvatarImage,
-} from "@/components/ui/avatar"
+} from "@/components/ui/avatar";
 import {
     Menubar,
-    MenubarCheckboxItem,
     MenubarContent,
     MenubarItem,
     MenubarMenu,
-    MenubarRadioGroup,
-    MenubarRadioItem,
-    MenubarSeparator,
-    MenubarShortcut,
-    MenubarSub,
-    MenubarSubContent,
-    MenubarSubTrigger,
     MenubarTrigger,
-} from "@/components/ui/menubar"
-export default function Header() {
+} from "@/components/ui/menubar";
 
+function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState(null);
-    const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -44,7 +35,6 @@ export default function Header() {
                     const userData = await response.json();
                     setIsLoggedIn(true);
                     setUserData(userData);
-                    // console.log('User data:', userData);
                 } else {
                     setIsLoggedIn(false);
                     setUserData(null);
@@ -59,6 +49,16 @@ export default function Header() {
         fetchCurrentUser();
     }, []);
 
+    const handleViewAllJobs = (e) => {
+        e.preventDefault();
+        navigate('login');
+    };
+
+    const handleSignUp = (e) => {
+        e.preventDefault();
+        navigate('signup');
+    };
+
     const handleLogout = async () => {
         try {
             const response = await fetch('http://localhost:3000/api/v1/user/logout', {
@@ -72,7 +72,7 @@ export default function Header() {
             if (response.ok) {
                 setIsLoggedIn(false);
                 setUserData(null);
-                navigate('/login')
+                navigate('/login');
             } else {
                 console.error('Failed to logout:', response.statusText);
             }
@@ -81,93 +81,63 @@ export default function Header() {
         }
     };
 
-    const isActive = (path) => location.pathname === path;
-
     return (
-        <nav className="bg-blue-600">
-            <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-                <div className="relative flex h-16 items-center justify-between">
-                    <div className="flex items-center justify-between w-full">
-                        <div className="flex-shrink-0">
-                            <img className="h-8 w-auto" src={logo} alt="Career Hub" />
-                        </div>
-                        <div className="hidden sm:block">
-                            <div className="flex space-x-4">
-                                <Link
-                                    to={isLoggedIn ? '/' : '/login'}
-                                    className={`rounded-md px-3 py-2 text-sm font-medium text-white ${isActive('/') ? 'bg-gray-900' : 'hover:bg-gray-700'}`}
-                                >
-                                    {isLoggedIn ? 'Home' : 'Login'}
-                                </Link>
-                                {isLoggedIn ? (
-                                    <>
-                                        {userData?.data?.role !== "student" && (
-                                            <Link
-                                                to="/post-job"
-                                                className={`rounded-md px-3 py-2 text-sm font-medium text-white ${isActive('/post-job') ? 'bg-gray-900' : 'hover:bg-gray-700'}`}
-                                            >
-                                                Post Job
-                                            </Link>
-                                        )}
-                                        {userData?.data?.role !== "recruiter" && (
-                                            <Link
-                                                to="/add-resume"
-                                                className={`rounded-md px-3 py-2 text-sm font-medium text-white ${isActive('/add-resume') ? 'bg-gray-900' : 'hover:bg-gray-700'}`}
-                                            >
-                                                Add Resume
-                                            </Link>
-                                        )}
-                                    </>
-                                ) : (
-                                    <Link
-                                        to="/signup"
-                                        className={`rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700 ${isActive('/signup') ? 'bg-gray-900' : ''}`}
-                                    >
-                                        Sign Up
-                                    </Link>
+        <header className="bg-blue-600 shadow-lg border-b">
+            <div className="container mx-auto px-4 py-4 flex flex-wrap flex-row items-center justify-between">
+                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white ">CAREER HUB</div>
+                <div className="flex-grow flex justify-center space-x-6">
+                    <nav className="flex flex-row space-y-0 space-x-6 ">
+                        <a href="/" className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-white hover:text-black">Home</a>
+                        <a href="#" className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-white hover:text-black">Explore</a>
+                        <a href="user-dashboard" className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-white hover:text-black">Search</a>
+                        {isLoggedIn && (
+                            <>
+                                {userData?.data?.role !== "student" && (
+                                    <a href="post-job" className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-white hover:text-black">Post a Job</a>
                                 )}
-                            </div>
-                        </div>
-                    </div>
-                    {isLoggedIn && userData && (
-                        <div className="relative ml-3">
-                            <Menubar className='border-none outline-none bg-blue-600 focus:'>
-                                <MenubarMenu className=''>
-                                    <MenubarTrigger className='w-full'>
+                                {userData?.data?.role !== "recruiter" && (
+                                    <a href="add-resume" className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-white hover:text-black">Add Resume</a>
+                                )}
+                            </>
+                        )}
+                    </nav>
+                </div>
+                <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+                    {isLoggedIn ? (
+                        <div className="flex items-center">
+                            <Menubar className='border-none bg-blue-600 outline-none'>
+                                <MenubarMenu>
+                                    <MenubarTrigger className='w-full flex items-center'>
                                         <Avatar>
-                                            <AvatarImage src={userData.image || profile} alt={userData.userName}/>
+                                            <AvatarImage src={userData.image || profile} alt={userData.userName} />
                                             <AvatarFallback>CN</AvatarFallback>
                                         </Avatar>
-                                        {/* <span className="sr-only">Open user menu</span>
-                                        <img
-                                            className="h-8 w-8 rounded-full"
-                                            src={userData.image || profile}
-                                            alt={userData.userName}
-                                        /> */}
                                     </MenubarTrigger>
                                     <MenubarContent className='w-[10%]'>
                                         <Link to='/profile'>
-                                            <MenubarItem className>
+                                            <MenubarItem>
                                                 View Profile
                                             </MenubarItem>
                                         </Link>
-
-                                        {
-                                            isLoggedIn && (
-                                                <MenubarItem onClick={handleLogout}>
-                                                    Logout
-                                                </MenubarItem>
-
-                                            )
-                                        }
+                                        <MenubarItem onClick={handleLogout}>
+                                            Logout
+                                        </MenubarItem>
                                     </MenubarContent>
                                 </MenubarMenu>
                             </Menubar>
                         </div>
+                    ) : (
+                        <div className='flex flex-grow space-x-2'>
+                            <button onClick={handleViewAllJobs} className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl px-3 sm:px-4 py-1 sm:py-2 bg-black text-white sm:rounded-sm rounded-md">Log In</button>
+                            <button onClick={handleSignUp} className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl px-3 sm:px-4 py-1 sm:py-2 bg-black text-white sm:rounded-sm rounded-md">Sign Up</button>
+                        </div>
                     )}
                 </div>
             </div>
-        </nav>
+        </header>
     );
 }
+
+export default Header;
+
 

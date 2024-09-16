@@ -29,9 +29,13 @@ app.use("/api/v1/application",applicationRouter)
 
 app.use((err, req, res, next) => {
     if (err instanceof ApiError) {
-      return res.status(err.statusCode).json({ message: err.message, errors: err.errors });
+      return res.status(err.statusCode).json({  
+        success: false, 
+        message: err.message, 
+        errors: err.errors,
+        stack: err.stack });
     }
-    res.status(500).json({ message: "Internal Server Error" });
+     res.status(500).json({ message: "Internal Server Error" });
   });
   
 

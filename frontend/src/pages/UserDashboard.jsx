@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {
   Select,
   SelectTrigger,
@@ -30,6 +31,10 @@ const UserDashboard = () => {
     status: '',
   });
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const search = searchParams.get('search') || '';
 
   const fetchJobs = async () => {
     setIsLoading(true);
@@ -44,7 +49,7 @@ const UserDashboard = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ search: searchTerm, filters }),
+        body: JSON.stringify({ search: (searchTerm || search), filters }),
       });
       if (!response.ok) {
         throw new Error('Failed to fetch jobs');
@@ -85,7 +90,7 @@ const UserDashboard = () => {
 
   const handleFilterChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const parsedValue = type === 'checkbox' ? checked : (name === 'salaryMin' || name === 'workExperienceMinYears') ? Math.max(0, parseInt(value, 10)) : 0 ? (typeof value == NaN) : value;
+    const parsedValue = type === 'checkbox' ? checked : (name === 'salaryMin' || name === 'workExperienceMinYears') ? Math.max(0, parseInt(value, 10)) : value;
     setFilters({ ...filters, [name]: parsedValue });
   };
   
@@ -138,13 +143,13 @@ const UserDashboard = () => {
             placeholder='Min Experience ( Years )'
         />
         <div className="flex justify-end mb-4">
-                <button 
-                    onClick={handleReset} 
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
-                >
-                    Reset
-                </button>
-            </div>
+            <button 
+                onClick={handleReset} 
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
+            >
+                Reset
+            </button>
+        </div>
       </div>
       {isLoading && (
         <div className="flex justify-center items-center">

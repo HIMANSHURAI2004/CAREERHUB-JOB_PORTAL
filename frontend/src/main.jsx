@@ -21,12 +21,16 @@ import CompanyDetails from './components/CompanyDetails';
 import UserJobs from './components/UserJobs';
 import JobApplications from './pages/JobApplications';
 import UserResume from './pages/UserResume';
+import ForgotPassword from './pages/ForgotPassword';
+import AboutUs from './pages/AboutUs';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
+
+      <Route path='/' element={<Home />} />
       <Route path='/' element={<Layout />}>
-        <Route path='' element={<Home />} />
+        {/* <Route path='' element={<Home />} /> */}
         <Route path='add-resume' element={<AddResume />} />
         <Route path='post-job' element={<PostJob />} />
         <Route path='profile' element={<Profile />} />
@@ -40,11 +44,13 @@ const router = createBrowserRouter(
         <Route path='/user-resume/:id' element={<UserResume/>} />
         <Route path='admin-dashboard' element={<AdminDashboard />} />
         <Route path='user-dashboard' element={<UserDashboard />} />
+        <Route path='about-us' element={<AboutUs/>} />
       </Route>
       
       <Route path='/signup' element={<SignUp />} />
       <Route path='/login' element={<Login />} />
       <Route path='/admin/dashboard' element={<Dashboard/>} />
+      <Route path='/forgot-password'element={<ForgotPassword/>}></Route>
     </>
   )
 );
