@@ -10,7 +10,7 @@ import {
   Search,
   Users,
 } from "lucide-react"
-
+import { Building2 } from 'lucide-react';
 import {
   Avatar,
   AvatarFallback,
@@ -25,6 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { NotebookPen } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,46 +44,167 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { useEffect, useState } from "react"
+import { BriefcaseBusiness } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+function Dashboard() {
+  const [countData, setCountData] = useState(
+    {
+      usersCount: 0,
+      jobsCount: 0,
+      applicationsCount: 0,
+      companiesCount: 0,
+    }
+  );
 
- function Dashboard() {
+  const [userEntries, setUserEntries] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [jobEntries, setJobEntries] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const navigate = useNavigate();
+  const getDashboardData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:3000/api/v1/user/get-all-counts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(),
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch count');
+      };
+
+      const responseData = await response.json();
+      setCountData(responseData.data);
+    } catch (error) {
+      setErrorMessage(error.message || 'Failed to fetch count');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getDashboardData();
+    getUserData();
+    getJobsData();
+  }, []);
+
+  const getUserData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:3000/api/v1/user/admin-dashboard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ modelName: 'users' }),
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch entries');
+      }
+
+      const responseData = await response.json();
+      setUserEntries(responseData.data.slice(0, 6));
+    } catch (error) {
+      setErrorMessage(error.message || 'Failed to fetch entries');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getJobsData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:3000/api/v1/user/admin-dashboard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ modelName: 'jobs' }),
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch entries');
+      }
+
+      const responseData = await response.json();
+      // console.log(responseData.data);
+      setJobEntries(responseData.data.slice(0, 5));
+    } catch (error) {
+      setErrorMessage(error.message || 'Failed to fetch entries');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/v1/user/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        navigate('/login')
+      } else {
+        console.error('Failed to logout:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Failed to logout:', error);
+    }
+  };
+
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+      <header className="sticky top-0 flex h-16 items-center gap-4 bg-background px-4 md:px-6 border-b-2 bg-blue-700 text-white border-blue-600">
+        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 ">
           <Link
-            href="#"
+            to="#"
             className="flex items-center gap-2 text-lg font-semibold md:text-base"
           >
             <Package2 className="h-6 w-6" />
             <span className="sr-only">Acme Inc</span>
           </Link>
           <Link
-            href="#"
-            className="text-foreground transition-colors hover:text-foreground"
+            to="/admin/dashboard"
+            className=" transition-colors text-foreground"
           >
             Dashboard
           </Link>
           <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            to="/admin/dashboard/search"
+            className=" transition-colors hover:text-foreground"
           >
-            Orders
+            Search
           </Link>
           <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            to="/admin/dashboard/users"
+            className=" transition-colors hover:text-foreground"
           >
-            Products
+            Users
           </Link>
           <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            to="/admin/dashboard/jobs"
+            className=" transition-colors hover:text-foreground"
           >
-            Customers
+            Jobs
           </Link>
           <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            to="/admin/dashboard/applications"
+            className=" hover:text-foreground"
+          >
+            Applications
+          </Link>
+          <Link
+            to="#"
+            className=" transition-colors hover:text-foreground"
           >
             Analytics
           </Link>
@@ -99,37 +221,43 @@ import {
             </Button>
           </SheetTrigger>
           <SheetContent side="left">
-            <nav className="grid gap-6 text-lg font-medium">
+            <nav className="grid gap-6 text-lg font-medium ">
               <Link
-                href="#"
+                to="#"
                 className="flex items-center gap-2 text-lg font-semibold"
               >
                 <Package2 className="h-6 w-6" />
                 <span className="sr-only">Acme Inc</span>
               </Link>
-              <Link href="#" className="hover:text-foreground">
+              <Link to="/" className="text-foreground">
                 Dashboard
               </Link>
               <Link
-                href="#"
+                to="/admin/dashbaord/search"
                 className="text-muted-foreground hover:text-foreground"
               >
-                Orders
+                Search
               </Link>
               <Link
-                href="#"
+                to="/admin/dashboard/users"
                 className="text-muted-foreground hover:text-foreground"
               >
-                Products
+                Users
               </Link>
               <Link
-                href="#"
+                to="/admin/dashboard/jobs"
                 className="text-muted-foreground hover:text-foreground"
               >
-                Customers
+                Jobs
               </Link>
               <Link
-                href="#"
+                to="/admin/dashboard/applications"
+                className=" hover:text-foreground"
+              >
+                Applications
+              </Link>
+              <Link
+                to="#"
                 className="text-muted-foreground hover:text-foreground"
               >
                 Analytics
@@ -138,16 +266,9 @@ import {
           </SheetContent>
         </Sheet>
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-          <form className="ml-auto flex-1 sm:flex-initial">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search products..."
-                className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-              />
-            </div>
-          </form>
+          <div className="relative ml-auto flex-1 sm:flex-initial">
+
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
@@ -156,12 +277,11 @@ import {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                <Link to='/admin/account'>Account</Link>
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -171,12 +291,12 @@ import {
           <Card x-chunk="dashboard-01-chunk-0">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Total Revenue
+                Total Users
               </CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
+              <div className="text-2xl font-bold">{countData.usersCount}</div>
               <p className="text-xs text-muted-foreground">
                 +20.1% from last month
               </p>
@@ -185,12 +305,12 @@ import {
           <Card x-chunk="dashboard-01-chunk-1">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Subscriptions
+                Total Posted Jobs
               </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <BriefcaseBusiness className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
+              <div className="text-2xl font-bold">{countData.jobsCount}</div>
               <p className="text-xs text-muted-foreground">
                 +180.1% from last month
               </p>
@@ -198,11 +318,11 @@ import {
           </Card>
           <Card x-chunk="dashboard-01-chunk-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Sales</CardTitle>
-              <CreditCard className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Total Applications</CardTitle>
+              <NotebookPen className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+12,234</div>
+              <div className="text-2xl font-bold">{countData.applicationsCount}</div>
               <p className="text-xs text-muted-foreground">
                 +19% from last month
               </p>
@@ -210,11 +330,11 @@ import {
           </Card>
           <Card x-chunk="dashboard-01-chunk-3">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Total Companies</CardTitle>
+              <Building2 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+573</div>
+              <div className="text-2xl font-bold">{countData.companiesCount}</div>
               <p className="text-xs text-muted-foreground">
                 +201 since last hour
               </p>
@@ -227,13 +347,13 @@ import {
           >
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
-                <CardTitle>Transactions</CardTitle>
+                <CardTitle>Recent Jobs</CardTitle>
                 <CardDescription>
-                  Recent transactions from your store.
+                  A list of the most recent jobs posted by recuiters
                 </CardDescription>
               </div>
-              <Button asChild size="sm" className="ml-auto gap-1">
-                <Link href="#">
+              <Button asChild size="sm" className="ml-auto gap-1 bg-blue-600 hover:bg-blue-800">
+                <Link to="/admin/dashboard/jobs">
                   View All
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
@@ -243,204 +363,61 @@ import {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Customer</TableHead>
+                    <TableHead>User</TableHead>
                     <TableHead className="hidden xl:table-column">
-                      Type
+                      title
                     </TableHead>
                     <TableHead className="hidden xl:table-column">
-                      Status
+                      Created At
                     </TableHead>
-                    <TableHead className="hidden xl:table-column">
-                      Date
-                    </TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
+
+                    <TableHead className="text-right">ID</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      <div className="font-medium">Liam Johnson</div>
-                      <div className="hidden text-sm text-muted-foreground md:inline">
-                        liam@example.com
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      Sale
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      <Badge className="text-xs" variant="outline">
-                        Approved
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                      2023-06-23
-                    </TableCell>
-                    <TableCell className="text-right">$250.00</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <div className="font-medium">Olivia Smith</div>
-                      <div className="hidden text-sm text-muted-foreground md:inline">
-                        olivia@example.com
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      Refund
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      <Badge className="text-xs" variant="outline">
-                        Declined
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                      2023-06-24
-                    </TableCell>
-                    <TableCell className="text-right">$150.00</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <div className="font-medium">Noah Williams</div>
-                      <div className="hidden text-sm text-muted-foreground md:inline">
-                        noah@example.com
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      Subscription
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      <Badge className="text-xs" variant="outline">
-                        Approved
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                      2023-06-25
-                    </TableCell>
-                    <TableCell className="text-right">$350.00</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <div className="font-medium">Emma Brown</div>
-                      <div className="hidden text-sm text-muted-foreground md:inline">
-                        emma@example.com
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      Sale
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      <Badge className="text-xs" variant="outline">
-                        Approved
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                      2023-06-26
-                    </TableCell>
-                    <TableCell className="text-right">$450.00</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <div className="font-medium">Liam Johnson</div>
-                      <div className="hidden text-sm text-muted-foreground md:inline">
-                        liam@example.com
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      Sale
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      <Badge className="text-xs" variant="outline">
-                        Approved
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                      2023-06-27
-                    </TableCell>
-                    <TableCell className="text-right">$550.00</TableCell>
-                  </TableRow>
+                  {jobEntries.map((entry) => (
+                    jobEntries.length > 0 && (
+                      <TableRow key={entry._id}>
+                        <TableCell>
+                          <div className="font-medium">{entry.title}</div>
+                          <div className="hidden text-sm text-muted-foreground md:inline">
+                            {new Date(entry.createdAt).toLocaleString()}
+                          </div>
+                        </TableCell>
+
+
+                        <TableCell className="text-right">{entry._id}</TableCell>
+                      </TableRow>
+                    )
+                  ))}
                 </TableBody>
               </Table>
             </CardContent>
           </Card>
           <Card x-chunk="dashboard-01-chunk-5">
             <CardHeader>
-              <CardTitle>Recent Sales</CardTitle>
+              <CardTitle>Recent Users</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-8">
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="https://github.com/shadcn.png" alt="Avatar" />
-                  <AvatarFallback>OM</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Olivia Martin
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    olivia.martin@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$1,999.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/02.png" alt="Avatar" />
-                  <AvatarFallback>JL</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Jackson Lee
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    jackson.lee@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$39.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/03.png" alt="Avatar" />
-                  <AvatarFallback>IN</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Isabella Nguyen
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    isabella.nguyen@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$299.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/04.png" alt="Avatar" />
-                  <AvatarFallback>WK</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    William Kim
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    will@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$99.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/05.png" alt="Avatar" />
-                  <AvatarFallback>SD</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Sofia Davis
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    sofia.davis@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$39.00</div>
-              </div>
+              {userEntries.map((entry) =>
+                entry.role !== 'admin' &&
+                (
+                  <div key={entry._id} className="flex items-center gap-4">
+                    <Avatar className="hidden h-9 w-9 sm:flex">
+                      <AvatarImage src={entry.image} alt="Avatar" />
+                      <AvatarFallback className='uppercase'>{entry.userName.split(' ')[0].slice(0, 1)}</AvatarFallback>
+                    </Avatar>
+                    <div className="grid gap-1">
+                      <p className="text-sm font-medium leading-none">
+                        {entry.userName}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {entry.email}
+                      </p>
+                    </div>
+                    <div className="ml-auto text-xs uppercase">{entry.role}</div>
+                  </div>
+                ))}
             </CardContent>
           </Card>
         </div>

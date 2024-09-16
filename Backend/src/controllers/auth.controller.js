@@ -700,7 +700,6 @@ const deleteResume = asyncHandler(async (req, res) => {
 
 const getAllEntriesOfModel = asyncHandler(async (req, res) => {
   const { modelName, search, filters } = req.body;
-
   let Model;
   switch (modelName.toLowerCase()) {
     case 'users':
@@ -721,7 +720,6 @@ const getAllEntriesOfModel = asyncHandler(async (req, res) => {
     default:
       throw new ApiError(400, 'Invalid model name');
   }
-
   let query = {};
   if (search || filters) {
     switch (modelName.toLowerCase()) {
@@ -797,7 +795,7 @@ const getAllEntriesOfModel = asyncHandler(async (req, res) => {
     let filteredEntries = entries;
     
     
-    if (modelName.toLowerCase() === 'jobs' && (filters.salaryMin|| filters.salaryMax)) {
+    if (modelName.toLowerCase() === 'jobs' && (filters?.salaryMin|| filters?.salaryMax)) {
       filteredEntries = entries.filter(job => {
         const salary = parseInt(job.salary, 10);
         const salaryMin = filters.salaryMin ? parseInt(filters.salaryMin, 10) : 0;
@@ -822,9 +820,21 @@ const getAllEntriesOfModel = asyncHandler(async (req, res) => {
   }
 });
 
+const getCountsOfAllOfModels = asyncHandler(async (req, res) => {
+    const usersCount = await User.countDocuments();
+    const companiesCount = await Company.countDocuments();
+    const jobsCount = await Job.countDocuments();
+    const resumesCount = await Resume.countDocuments();
+    const applicationsCount = await Application.countDocuments();
 
+    return res.status(200).json(
+      new ApiResponse(200, {usersCount, companiesCount, jobsCount, resumesCount, applicationsCount}, "Counts fetched successfully") 
+    );
+  
+})
 const countEntriesOfModel = asyncHandler(async (req, res) => {
   const { modelName } = req.body;
+
 
   let Model;
   switch (modelName.toLowerCase().trim()) {
@@ -854,6 +864,7 @@ const countEntriesOfModel = asyncHandler(async (req, res) => {
     console.error(`Error counting ${modelName.toLowerCase()} :`, error);
     res.status(500).json({ message: 'Server Error' });
   }
+
 });
 
 

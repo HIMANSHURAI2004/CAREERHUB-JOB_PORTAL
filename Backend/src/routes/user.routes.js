@@ -3,6 +3,8 @@ import {addResume, changeCurrentPassword, deleteResume, deleteUser,getUser, getC
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/user.middleware.js";
 
+
+
 const router = Router()
 
 router.route("/preRegisterValidation").post(preRegisterUserValidation)
@@ -47,6 +49,7 @@ router.route("/delete-resume").delete(verifyJWT,deleteResume);
 
 router.route("/admin-dashboard").post(verifyJWT,getAllEntriesOfModel)
 router.route("/count-entries").post(verifyJWT,countEntriesOfModel)
+router.route("/get-all-counts").post(verifyJWT,getCountsOfAllOfModels)
 router.route("/admin-delete").delete(verifyJWT,deleteEntry)
 
 router.route("/forgot-password").post(forgotPassword);

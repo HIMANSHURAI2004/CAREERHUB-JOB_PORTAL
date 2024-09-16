@@ -1,6 +1,6 @@
 import {Router} from "express";
 import { verifyJWT } from "../middlewares/user.middleware.js";
-import { createJob, deleteJob, getCompanyDetails, getCompanyDetailsById, getJob, getJobs, searchJobs, updateJob,getRecruiterJobs } from "../controllers/job.controller.js";
+import { createJob, deleteJob, getCompanyDetails, getCompanyDetailsById, getJob, getJobs, searchJobs,getRecruiterJobs, updateJob } from "../controllers/job.controller.js";
 
 const router = Router();
 
