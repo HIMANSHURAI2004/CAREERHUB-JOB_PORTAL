@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import profile from './profile.jpg';
+import profile from '../../assests/profile.jpg';
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";

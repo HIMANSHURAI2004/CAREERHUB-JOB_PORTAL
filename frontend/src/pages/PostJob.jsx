@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { ToastAction } from "@/components/ui/toast"
+import  { useState } from 'react';
 import { useToast } from "@/components/ui/use-toast"
 import { useNavigate } from 'react-router-dom';
 const PostJob = () => {

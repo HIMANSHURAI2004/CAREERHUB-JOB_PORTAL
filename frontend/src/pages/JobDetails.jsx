@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { BiArrowBack } from 'react-icons/bi';
 import { Button } from "@/components/ui/button";
-import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
-import { SeparatorHorizontal } from 'lucide-react';
-import { Separator } from '@radix-ui/react-dropdown-menu';
 import { IoIosArrowBack } from "react-icons/io";
 const JobDetails = () => {
   const { id } = useParams();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import {
@@ -8,7 +8,6 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import image1 from '../../assests/jobtype/data_science.png';
 
 
 const Spinner = () => (

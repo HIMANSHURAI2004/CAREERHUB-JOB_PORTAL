@@ -27,14 +27,12 @@ import AdminDashboardJobs from './pages/AdminDashboardJobs';
 import AdminDashboardApplications from './pages/AdminDashboardApplications';
 import AdminDashboardSearch from './pages/AdminDashboardSearch';
 import AdminAccount from './pages/AdminAccount';
-import AboutUs from './pages/AboutUs';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
 
-      <Route path='/' element={<Home />} />
       <Route path='/' element={<Layout />}>
-        {/* <Route path='' element={<Home />} /> */}
+        <Route path='/' element={<Home />} />
         <Route path='add-resume' element={<AddResume />} />
         <Route path='post-job' element={<PostJob />} />
         <Route path='profile' element={<Profile />} />

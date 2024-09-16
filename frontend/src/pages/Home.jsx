@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import company from "../../assests/company.png";
 import TypingEffect from "@/components/TypingEffect";
 import bg from "../../assests/footer.png";
-import { RiSearchEyeLine } from "react-icons/ri";
 import { IoIosSearch } from "react-icons/io";
 // Existing categories and jobs data
 const categories = [

@@ -1,21 +1,12 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import {
-    Activity,
-    ArrowUpRight,
     CircleUser,
-    CreditCard,
-    DollarSign,
     Menu,
     Package2,
-    Search,
-    Users,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { NotebookPen } from 'lucide-react';
 import {
     DropdownMenu,
     DropdownMenuContent,

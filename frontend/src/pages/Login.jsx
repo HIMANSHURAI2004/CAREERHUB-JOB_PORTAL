@@ -1,6 +1,6 @@
 import  { useState } from 'react';
-import jobImage from './authbgimage.png';
-import logo from "./careerhublogo.png";
+import jobImage from '../../assests/authbgimage.png';
+import logo from "../../assests/careerhublogo.png";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";

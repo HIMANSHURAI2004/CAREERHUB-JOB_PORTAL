@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useState } from 'react';
-import jobImage from './authbgimage.png';
-import logo from "./careerhublogo.png"
+import jobImage from '../../assests/authbgimage.png';
+import logo from "../../assests/careerhublogo.png";
 import { useNavigate } from "react-router-dom";
 import {
     Select,
@@ -15,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { RiEyeFill, RiEyeOffFill } from 'react-icons/ri';
-import axios from 'axios'
 
 function SignUp() {
     const navigate = useNavigate();
@@ -99,6 +98,7 @@ function SignUp() {
         } catch (error) {
             setErrorMessage(error.message || 'Failed to register user');
             setIsLoading(false)
+            return;
         }
 
             // console.log(response1.data)
@@ -126,6 +126,7 @@ function SignUp() {
             } catch (error) {
                 setErrorMessage(error.message || 'Failed to register user');
                 setIsLoading(false)
+                return;
             }
             // console.log(response2.data.data)
 
@@ -180,8 +181,8 @@ function SignUp() {
             alert("Registration successful");
             navigate('/login');
         } catch (error) {
-            setErrorMessage(error.response.data.message || 'Failed to verify OTP');
             setIsLoading(false);
+            setErrorMessage(error.message || 'Failed to verify OTP');
         }
     };
 
@@ -413,13 +414,9 @@ return (
                     </div>
                 </div>
             </div>
-            <div className='hidden lg:flex lg:w-[40%] justify-end items-center relative overflow-hidden'>
-                <img
-                    src={jobImage}
-                    alt='jobImage'
-                    className='absolute top-[200px] right-[200px] z-0 lg:max-w-none w-[120%]'
-                />
-            </div>
+            <div className='lg:w-[40%] hidden lg:block '>
+                    <img src={jobImage} alt="img" className='w-full h-full object-cover' />
+                </div>
         </div>
     </div>
 );

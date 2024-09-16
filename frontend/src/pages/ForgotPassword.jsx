@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import axios from 'axios';
-import logo from "./careerhublogo.png";
+import logo from "../../assests/careerhublogo.png";
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import '../App.css';

@@ -2,7 +2,7 @@ import  { useEffect } from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import profile from './profile.jpg'
+import profile from '../../assests/profile.jpg'
 import {
     Avatar,
     AvatarFallback,

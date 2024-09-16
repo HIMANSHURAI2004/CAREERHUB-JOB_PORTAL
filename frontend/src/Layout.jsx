@@ -5,10 +5,8 @@ import Navbar from './components/Navbar'
 function Layout() {
   return (
     <>
-    {/* <Header/> */}
     <Navbar/>
     <Outlet/>
-    {/* <Footer/> */}
     </>
   )
 }
