@@ -187,8 +187,8 @@ const JobDetails = () => {
               <h3 className="mb-6 text-lg font-semibold">Skills Required</h3>
               <div className='flex flex-wrap '>
                 {
-                  job.skillsRequired.map((skill) => (
-                    <span className="bg-gray-50  px-4 py-1.5 rounded-full mr-2">{skill}</span>
+                  job.skillsRequired.map((skill,index) => (
+                    <span className="bg-gray-50  px-4 py-1.5 rounded-full mr-2" key={index}>{skill}</span>
                   ))
                 }
               </div>

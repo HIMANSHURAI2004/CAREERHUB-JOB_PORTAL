@@ -53,7 +53,7 @@ function AdminDashboardSearch() {
     const fetchEntries = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:3000/api/v1/user/admin-dashboard', {
+            const response = await fetch(`http://localhost:3000/api/v1/user/admin-dashboard`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ function AdminDashboardSearch() {
     const fetchCount = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:3000/api/v1/user/count-entries', {
+            const response = await fetch(`http://localhost:3000/api/v1/user/count-entries`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ function AdminDashboardSearch() {
     const handleDelete = async (entryId) => {
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:3000/api/v1/user/admin-delete', {
+            const response = await fetch(`http://localhost:3000/api/v1/user/admin-delete`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -151,7 +151,6 @@ function AdminDashboardSearch() {
                 credentials: 'include',
             });
 
-            console.log(response)
 
             if (!response.ok) {
                 throw new Error('Failed to delete entry');
@@ -180,7 +179,7 @@ function AdminDashboardSearch() {
 
     const handleLogout = async () => {
         try {
-          const response = await fetch('http://localhost:3000/api/v1/user/logout', {
+          const response = await fetch(`http://localhost:3000/api/v1/user/logout`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -318,7 +317,7 @@ function AdminDashboardSearch() {
                                 <Link to='/admin/account'>Account</Link>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Logout</DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

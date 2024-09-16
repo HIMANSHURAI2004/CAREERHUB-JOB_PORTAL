@@ -5,18 +5,14 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import mongoose from "mongoose";
 import { User } from "../models/user.model.js";
+
+
 const createApplication = asyncHandler(async (req, res) => {
   const { id: jobId } = req.params; 
   const applicant = req.user._id;
 
-  //TODO uncomment this
-  // if(!req.user?.resume){
-  //   throw new ApiError(400, "Please upload your resume before applying for a job");
-  // }
-
-  // console.log(jobId,applicant)
   const user =await User.findById(applicant)
-  // console.log(user)
+
   if (user.role !== "student") {
     throw new ApiError(404, "You Can Not Apply For this Job");
   }
@@ -87,7 +83,7 @@ const getAllApplicationsForJob = asyncHandler(async (req, res) => {
 
 const getUserApplications = asyncHandler(async (req, res) => {
   const applications = await Application.find({ applicant: req.user._id }).populate("job").select("-__v");
-  // console.log(applications.job);
+
   if (applications.length === 0) {
     return res.status(200).json(new ApiResponse(200, [], "No applications found for this user"));
   }

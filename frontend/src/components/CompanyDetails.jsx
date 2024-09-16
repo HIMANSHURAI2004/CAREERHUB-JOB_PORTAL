@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@radix-ui/react-label";
 
+
 function CompanyDetails() {
     const [companyDetails, setCompanyDetails] = useState(null);
     const [editData, setEditData] = useState({
@@ -29,11 +29,10 @@ function CompanyDetails() {
         website: "",
     });
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
 
     async function getCompanyDetails() {
         try {
-            const response = await fetch("http://localhost:3000/api/v1/job/get-company-details", {
+            const response = await fetch(`http://localhost:3000/api/v1/job/get-company-details`, {
                 method: "GET",
                 credentials: "include",
             });
@@ -62,7 +61,7 @@ function CompanyDetails() {
     async function handleUpdateDetails(e) {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:3000/api/v1/user/update-company-details", {
+            const response = await fetch(`http://localhost:3000/api/v1/user/update-company-details`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

@@ -33,7 +33,7 @@ const jobSchema = new mongoose.Schema({
     default: new Date('9999-12-31')
   },
 
-  workExperienceMinYears: { ////////////
+  workExperienceMinYears: { 
     type: Number,
     default: 0,
   },
@@ -52,8 +52,8 @@ const jobSchema = new mongoose.Schema({
   },
   industry: {
     type: String,
-    default: '',
-  },  //////////////
+    default: 'IT',
+  },  
 
 }, { timestamps: true });
 

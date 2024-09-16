@@ -106,12 +106,6 @@ function AddResume() {
         });
     };
 
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-
     const handleRemoveProject = (index) => {
         const updatedProjects = [...formData.projects];
         updatedProjects.splice(index, 1);
@@ -125,9 +119,8 @@ function AddResume() {
         e.preventDefault();
     
         try {
-            const accessToken = getCookie('accessToken'); // Retrieve access token from cookies
     
-            const response = await fetch('http://localhost:3000/api/v1/user/add-resume', {
+            const response = await fetch(`http://localhost:3000/api/v1/user/add-resume`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

@@ -9,16 +9,16 @@ import {
   const contributors = [
     {
       name: 'Himanshu Rai',
-      imageUrl: '../../assests/profile.jpg',
+      imageUrl: '../../assets/profile.jpg',
       github: 'https://github.com/HIMANSHURAI2004',
     },
     {
       name: 'Giriraj Bhatt',
-      imageUrl: '../../assests/profile.jpg',
+      imageUrl: '../../assets/profile.jpg',
       github: 'https://github.com/Girirajbhatt',
     }
   ];
-  import bg from "../../assests/footer.png";
+  import bg from "../../assets/footer.png";
   const AboutUs = () => {
     return (
       <div className=" w-full space-y-5">

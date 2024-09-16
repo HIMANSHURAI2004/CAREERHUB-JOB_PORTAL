@@ -17,9 +17,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Link } from "react-router-dom";
-import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
 import { Label } from "@radix-ui/react-label";
 
 function UserJobs() {
@@ -28,12 +26,11 @@ function UserJobs() {
     const [loading, setLoading] = useState(true);
     const [editingJobId, setEditingJobId] = useState(null);
     const [editingJob, setEditingJob] = useState({});
-    const navigate = useNavigate();
 
     async function fetchUserJobs() {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:3000/api/v1/job/get-recruiter-jobs', {
+            const response = await fetch(`http://localhost:3000/api/v1/job/get-recruiter-jobs`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

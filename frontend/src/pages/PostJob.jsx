@@ -16,7 +16,7 @@ const PostJob = () => {
     industry: '',
   });
   const { toast } = useToast()
-  
+  const [errorMessage,setErrorMessage]  = useState('');
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -50,7 +50,7 @@ const PostJob = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3000/api/v1/job/create-job', {
+      const response = await fetch(`http://localhost:3000/api/v1/job/create-job`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -64,7 +64,6 @@ const PostJob = () => {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description: "Failed to post job, Please try again.",
-          // action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
         throw new Error(errorData.message || 'Failed to add job');
       }
@@ -75,8 +74,7 @@ const PostJob = () => {
           navigate("/user-dashboard")
     }
 
-      const responseData = await response.json();
-      console.log(responseData);
+      // const responseData = await response.json();
 
     } catch (error) {
       setErrorMessage(error.message || 'Failed to add job');

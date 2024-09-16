@@ -11,7 +11,6 @@ import Application from "../models/application.model.js";
 import { generateOTP,sendOTPEmail } from "../utils/otpForgotPassword.js";
 import jwt from 'jsonwebtoken'
 import { sendOTPEmail as sendSignUpOTPEmail } from "../utils/otpSignUp.js";
-// import { resolveContent } from "nodemailer/lib/shared/index.js";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -31,82 +30,8 @@ const generateAccessAndRefreshToken = async (userId) => {
 }
 
 
-//Register User
-// const registerUser = asyncHandler(async (req, res) => {
-//   const { email, password, userName, contactNo, role } = req.body;
-
-//   if ([email, password, userName, contactNo].some((field) => field?.trim() === "")) {
-//     throw new ApiError(400, "All fields are required");
-//   }
-
-//   const existingUser = await User.findOne({ email });
-
-//   if (existingUser) {
-//     throw new ApiError(409, "User with entered email already exists");
-//   }
-
-//   if (role === "recruiter") {
-//     const { companyName, address } = req.body;
-
-//     if (!companyName || !address) {
-//       throw new ApiError(400, "Company Name and Address are required");
-//     }
-
-//     const userExist = await Company.findOne({ recruiter: existingUser?._id });
-//     if (userExist) {
-//       throw new ApiError(409, "Recruiter already owns a company");
-//     }
-//     const companyExist = await Company.findOne({ companyName });
-//     if (companyExist) {
-//       throw new ApiError(409, "Company Already Exists");
-//     }
-//   }
-
-//   // Now create the user
-//   const imageLocalPath = req.files?.image?.[0]?.path;
-//   let image;
-//   if (imageLocalPath) {
-//     image = await uploadOnCloudinary(imageLocalPath);
-//   }
-
-//   const user = await User.create({
-//     email,
-//     userName,
-//     contactNo,
-//     role,
-//     image: image ? image.url : "",
-//     password,
-//   });
-
-//   const createdUser = await User.findById(user._id).select("-password -refreshToken");
-
-//   if (!createdUser) {
-//     throw new ApiError(500, "Something went wrong while registering the user");
-//   }
-
-//   if (role === "recruiter") {
-//     const { companyName, address, website } = req.body;
-
-//     const company = await Company.create({
-//       companyName,
-//       address,
-//       website: website || "",
-//       recruiter: createdUser._id,
-//     });
-
-//     if (!company) {
-//       throw new ApiError(500, "Something went wrong while creating company");
-//     }
-
-//     return res.status(201).json(new ApiResponse(201, company, "Recruiter registered successfully"));
-//   }
-
-//   return res.status(201).json(new ApiResponse(201, createdUser, "User registered successfully"));
-// });
-
 const preRegisterUserValidation = asyncHandler(async (req, res, next) => {
   const { email, password, userName, contactNo, role } = req.body;
-  // console.log(req.body)
 
   if ([email, password, userName, contactNo].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
@@ -147,6 +72,7 @@ const preRegisterUserValidation = asyncHandler(async (req, res, next) => {
 
 });
 
+
 const sendOTP = asyncHandler(async (req, res, next) => {
 
   const {email} = req.body
@@ -163,78 +89,10 @@ const sendOTP = asyncHandler(async (req, res, next) => {
   return res.status(201).json(new ApiResponse(201, otpToken, "OTP sent to your email"));
 });
 
-// const registerUser = asyncHandler(async (req, res) => {
-//   const { email, password, userName, contactNo, role,otp,otpToken} = req.body;
-//   let image;
- 
-//   const decoded = jwt.verify(otpToken, process.env.ACCESS_TOKEN_SECRET);
-
-//   // console.log('Decoded token:', decoded);
-//     if (decoded.email !== email || decoded.otp !== otp) {
-//       throw new ApiError(400, "Invalid OTP");
-//     }
-
-//     // console.log(decoded)
-
-//     if (decoded.exp <= Date.now() / 1000) {
-//       throw new ApiError(400, "OTP Expired. Please try again");
-//     }
-
-// try {
-//       const imageLocalPath = req.files?.image?.[0]?.path;
-  
-//       if (imageLocalPath) {
-//         image = await uploadOnCloudinary(imageLocalPath);
-//       }
-  
-//     const user = await User.create({
-//       email,
-//       userName,
-//       contactNo,
-//       role,
-//       image : image ? image.url : "",
-//       password,
-//     });
-  
-//     const createdUser = await User.findById(user._id).select("-password -refreshToken");
-//     if (!createdUser) {
-//       throw new ApiError(500, "Something went wrong while registering the user");
-//     }
-// } catch (error) {
-//   if (image && image.public_id) {
-//     try {
-//       await deleteFromCloudinary(image.public_id);
-//     } catch (deleteError) {
-//         console.error("Error deleting image from Cloudinary:", deleteError);
-//     }
-//   }
-// }
-
-//   if (role === "recruiter") {
-
-//     const {companyName, address, website} = req.body;
-
-//     const company = await Company.create({
-//       companyName,
-//       address,
-//       website: website || "",
-//       recruiter: createdUser._id,
-//     });
-
-//     if (!company) {
-//       throw new ApiError(500, "Something went wrong while creating company");
-//     }
-
-//     return res.status(201).json(new ApiResponse(201, company, "Recruiter registered successfully"));
-//   }
-
-//   return res.status(201).json(new ApiResponse(201, createdUser, "User registered successfully"));
-// });
 
 const registerUser = asyncHandler(async (req, res) => {
   const { email, password, userName, contactNo, role, otp, otpToken } = req.body;
-  let image; // Declare image variable
-
+  let image; 
   try {
     const decoded = jwt.verify(otpToken, process.env.ACCESS_TOKEN_SECRET);
     
@@ -245,10 +103,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if (decoded.exp <= Date.now() / 1000) {
       throw new ApiError(400, "OTP Expired. Please try again");
     }
-    // console.log(req.files)
-    // console.log(req.files.image)
-    // console.log(req.files.image[0].path)
-
+    
     // Handle image upload to Cloudinary if provided
     const imageLocalPath = req.files?.image?.[0]?.path;
     console.log(imageLocalPath)
@@ -314,9 +169,6 @@ const registerUser = asyncHandler(async (req, res) => {
     }
   }
 });
-
-
-
 
 //Login User
 const loginUser = asyncHandler(async (req, res) => {
@@ -596,7 +448,6 @@ const updateCompanyDetails = asyncHandler(async (req, res) => {
 const addResume = asyncHandler(async (req, res) => {
   const { fullName, email, phone, linkedin, github, skills, workExperience, education, projects } = req.body;
 
-  // if ([fullName, email, phone].some((field) => field?.trim() === "")) {
   if (!fullName && !email && !phone) {
     throw new ApiError(400, "All fields are required");
   }
@@ -618,7 +469,7 @@ const addResume = asyncHandler(async (req, res) => {
   if (!resume) {
     throw new ApiError(500, "Something went wrong while adding resume");
   }
-  //TODO : Add resume to user
+
   const user = await User.findById(req.user._id);
   user.resume = resume._id;
   await user.save({ validateBeforeSave: false });
@@ -823,6 +674,7 @@ const getCountsOfAllOfModels = asyncHandler(async (req, res) => {
     );
   
 })
+
 const countEntriesOfModel = asyncHandler(async (req, res) => {
   const { modelName } = req.body;
 
@@ -857,8 +709,6 @@ const countEntriesOfModel = asyncHandler(async (req, res) => {
   }
 
 });
-
-
 
 const deleteEntry = async (req, res) => {
   const { modelName, entryId } = req.body;
@@ -952,11 +802,6 @@ const resetPassword = asyncHandler(async (req, res) => {
       throw new ApiError(404, "User not found");
     }
 
-    // let oldPassword = bcrypt.compare(user.password,newPassword)
-    // if (oldPassword) {
-    //   throw new ApiError(400, "Please create a new password");
-    // }
-
     user.password = newPassword;
     await user.save({ validateBeforeSave: false })
 
@@ -968,8 +813,6 @@ const resetPassword = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Error resetting password");
   }
 });
-
-
 
 
 export {

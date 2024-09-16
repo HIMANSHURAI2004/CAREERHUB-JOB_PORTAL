@@ -58,7 +58,7 @@ function AdminAccount() {
     
     async function getUserData() {
         try {
-            const response = await fetch("http://localhost:3000/api/v1/user/get-user", {
+            const response = await fetch(`http://localhost:3000/api/v1/user/get-user`, {
                 method: "GET",
                 credentials: "include",
             });
@@ -79,9 +79,8 @@ function AdminAccount() {
         const formData = new FormData();
         formData['oldPassword'] = oldPassword;
         formData['newPassword'] = newPassword;
-        // console.log(formData);
         try {
-            const response = await fetch('http://localhost:3000/api/v1/user/change-password', {
+            const response = await fetch(`http://localhost:3000/api/v1/user/change-password`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -95,7 +94,6 @@ function AdminAccount() {
                     variant: "destructive",
                     title: "Uh oh! Something went wrong.",
                     description: "Password change Failed, Please try again.",
-                    // action: <ToastAction altText="Try again">Try again</ToastAction>,
                 })
             }
             else {
@@ -103,25 +101,21 @@ function AdminAccount() {
                     description: "Password changed successfully .",
                 })
             }
-            // console.log(response);
         } catch (error) {
             console.error('Error changing password:', error);
-
         }
     }
     const handleDeleteAccount = async () => {
         try {
-            const response = await axios.delete('http://localhost:3000/api/v1/user/delete-user', {
+            const response = await axios.delete(`http://localhost:3000/api/v1/user/delete-user`, {
                 withCredentials: true,
             });
-            // console.log(response);
 
             if (!response?.data?.success) {
                 toast({
                     variant: "destructive",
                     title: "Uh oh! Something went wrong.",
                     description: "Account deletion Failed, Please try again.",
-                    // action: <ToastAction altText="Try again">Try again</ToastAction>,
                 })
             }
             else {
@@ -137,7 +131,7 @@ function AdminAccount() {
 
     const handleLogout = async () => {
         try {
-          const response = await fetch('http://localhost:3000/api/v1/user/logout', {
+          const response = await fetch(`http://localhost:3000/api/v1/user/logout`, {
             method: 'POST',
             credentials: 'include',
             headers: {
