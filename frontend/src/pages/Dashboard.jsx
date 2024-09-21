@@ -102,7 +102,7 @@ function Dashboard() {
       }
 
       const responseData = await response.json();
-      setUserEntries(responseData.data.slice(0, 6));
+      setUserEntries(responseData.data);
     } catch (error) {
       setErrorMessage(error.message || 'Failed to fetch entries');
     } finally {
@@ -126,7 +126,7 @@ function Dashboard() {
       }
 
       const responseData = await response.json();
-      setJobEntries(responseData.data.slice(0, 5));
+      setJobEntries(responseData.data);
     } catch (error) {
       setErrorMessage(error.message || 'Failed to fetch entries');
     } finally {

@@ -78,7 +78,7 @@
 - Backend server will start on port 3000.
 - Now go inside frontend directory:
   ```
-  cd ..\frontend
+  cd frontend
   ```
 - Install dependencies in frontend directory:
   ```
