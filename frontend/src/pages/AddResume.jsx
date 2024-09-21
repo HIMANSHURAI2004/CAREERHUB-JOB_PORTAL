@@ -288,7 +288,7 @@ function AddResume() {
                                 <div className='space-y-4'>
                                     <div className='flex justify-between items-center flex-wrap gap-y-2'>
                                         <h3 className='text-lg font-semibold '>Work Experience</h3>
-                                        <Button type='button' onClick={handleAddExperience} className="bg-blue-600">
+                                        <Button type='button' onClick={handleAddExperience} className="bg-slate-700">
                                             Add Work Experience
                                         </Button>
                                     </div>
@@ -379,7 +379,7 @@ function AddResume() {
                                 <div className='space-y-4'>
                                     <div className='flex justify-between items-center'>
                                         <h3 className='text-lg font-semibold'>Education</h3>
-                                        <Button type='button' onClick={handleAddEducation} className='bg-blue-600'>
+                                        <Button type='button' onClick={handleAddEducation} className='bg-slate-700'>
                                             Add Education
                                         </Button>
                                     </div>
@@ -472,7 +472,7 @@ function AddResume() {
                                 <div className='space-y-4'>
                                     <div className='flex justify-between items-center'>
                                         <h3 className='text-lg font-semibold'>Projects</h3>
-                                        <Button type='button' onClick={handleAddProject} className='bg-blue-600'>
+                                        <Button type='button' onClick={handleAddProject} className='bg-slate-700'>
                                             Add Project
                                         </Button>
                                     </div>
@@ -511,17 +511,17 @@ function AddResume() {
 
                             <div className='flex justify-end'>
                                 {currentSection !== 'personalDetails' && (
-                                    <Button type='button' onClick={handlePreviousSection} className='w-full lg:w-1/4 mr-2 bg-blue-600'>
+                                    <Button type='button' onClick={handlePreviousSection} className='w-full lg:w-1/4 mr-2 bg-slate-700'>
                                         Previous
                                     </Button>
                                 )}
                                 {currentSection !== 'projects' && (
-                                    <Button type='button' onClick={handleNextSection} className='w-full lg:w-1/4 ml-2 bg-blue-600'>
+                                    <Button type='button' onClick={handleNextSection} className='w-full lg:w-1/4 ml-2 bg-slate-700'>
                                         Next
                                     </Button>
                                 )}
                                 {currentSection === 'projects' && (
-                                    <Button type='submit' className='w-full lg:w-1/4 ml-2 bg-blue-600'>
+                                    <Button type='submit' className='w-full lg:w-1/4 ml-2 bg-slate-700'>
                                         Submit
                                     </Button>)
                                 }

@@ -1,7 +1,7 @@
 import TypingEffect from 'react-typing-effect';
 
 const TypingEffectComponent = () => (
-  <h1 className="text-3xl lg:text-6xl">
+  <h1 className="text-3xl lg:text-6xl ">
     <TypingEffect
       text={['Over 10K+ jobs are waiting for you', 'Find your dream job today', 'Make your dream career a reality']}
       speed={100}

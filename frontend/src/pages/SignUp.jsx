@@ -84,7 +84,10 @@ function SignUp() {
                     password : formData.password,
                     userName : formData.userName,
                     contactNo : formData.contactNo,
-                    role : formData.role
+                    role : formData.role,
+                    companyName: formData.companyName,
+                    address: formData.address,
+                    website: formData.website
                 }),
             });
 

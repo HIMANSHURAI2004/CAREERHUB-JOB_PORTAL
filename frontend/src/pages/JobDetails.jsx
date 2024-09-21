@@ -133,7 +133,7 @@ const JobDetails = () => {
       <div className=" mx-auto bg-white shadow-md  overflow-hidden ">
         <div className="p-6 ">
           <div className='flex flex-col gap-y-4'>
-            <h2 className=" text-2xl md:text-3xl font-bold text-gray-800 ">{job.title}</h2>
+            <h2 className=" text-2xl md:text-3xl font-semibold text-gray-800 font-serif">{job.title}</h2>
             <div className='mb-4'>
               <p className="font-semibold text-lg text-indigo-600">
                 {company?.companyName || 'Not specified'}
@@ -180,7 +180,7 @@ const JobDetails = () => {
           <div className='h-0.5 bg-gray-200 w-full my-16 rounded-full'></div>
           <div className="mb-10">
             <h3 className="mb-6 text-lg font-semibold">Job Description</h3>
-            <p className='px-6'>{job.description}</p>
+            <p className='px-6 leading-7'>{job.description}</p>
           </div>
           {job.skillsRequired.length > 0 && (
             <div className="mb-10">

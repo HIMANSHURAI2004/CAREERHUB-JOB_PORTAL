@@ -84,7 +84,7 @@ function Navbar() {
   return (
     <div>
         <header className="flex justify-between items-center px-6 py-4 bg-blue-600  shadow-lg border-b ">
-        <div className="text-xl font-bold text-white">CAREER HUB</div>
+        <div className="text-xl font-bold text-white">CAREERHUB</div>
         <div className="flex flex-grow justify-center space-x-6">
           <nav className="space-x-10 ">
             <a href="/" className="text-white hover:text-black">Home</a>

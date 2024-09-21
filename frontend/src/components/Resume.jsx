@@ -360,7 +360,8 @@ function Resume() {
                                         ) : (
                                             <div>
                                                 <div className="mb-4">
-                                                    <h2 className="text-lg font-semibold">Personal Details</h2>
+                                                    <h2 className="text-lg font-bold underline mt-2 mb-1 text-slate-700">Personal Details</h2>
+
                                                     <p><strong>Full Name:</strong> {resumeData.personalDetails.fullName}</p>
                                                     <p><strong>Email:</strong> {resumeData.personalDetails.email}</p>
                                                     <p><strong>Phone:</strong> {resumeData.personalDetails.phone}</p>
@@ -369,12 +370,12 @@ function Resume() {
                                                 </div>
 
                                                 <div className="mb-4">
-                                                    <h2 className="text-lg font-semibold">Skills</h2>
+                                                    <h2 className="text-lg font-bold underline mt-2 mb-1 text-slate-700">Skills</h2>
                                                     <p>{resumeData.skills.join(', ')}</p>
                                                 </div>
 
                                                 <div className="mb-4">
-                                                    <h2 className="text-lg font-semibold">Work Experience</h2>
+                                                    <h2 className="text-lg font-bold underline mt-2 mb-1 text-slate-700">Work Experience</h2>
                                                     {resumeData.workExperience.map((experience, index) => (
                                                         <div key={index} className="mb-4">
                                                             <p><strong>Job Title:</strong> {experience.jobTitle}</p>
@@ -388,7 +389,7 @@ function Resume() {
                                                 </div>
 
                                                 <div className="mb-4">
-                                                    <h2 className="text-lg font-semibold">Education</h2>
+                                                    <h2 className="text-lg font-bold underline mt-2 mb-1 text-slate-700">Education</h2>
                                                     {resumeData.education.map((edu, index) => (
                                                         <div key={index} className="mb-4">
                                                             <p><strong>Degree:</strong> {edu.degree}</p>
@@ -402,7 +403,7 @@ function Resume() {
                                                 </div>
 
                                                 <div className="mb-4">
-                                                    <h2 className="text-lg font-semibold">Projects</h2>
+                                                    <h2 className="text-lg font-bold underline mt-2 mb-1 text-slate-700">Projects</h2>
                                                     {resumeData.projects.map((project, index) => (
                                                         <div key={index} className="mb-4">
                                                             <p><strong>Project {index + 1}:</strong> {project}</p>

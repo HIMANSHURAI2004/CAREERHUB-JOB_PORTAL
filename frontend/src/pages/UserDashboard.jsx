@@ -111,7 +111,7 @@ const UserDashboard = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-4xl font-bold mb-2">Job Listings</h1>
+      <h1 className="text-4xl font-semibold mb-2 font-serif">Job Listings</h1>
       <div className=' text-gray-500 mb-6'>Discover opportunities that match your skills and aspirations.</div>
       <div className="flex flex-col md:flex-row mb-4 space-y-6 md:space-y-0 md:space-x-4">
         <input
