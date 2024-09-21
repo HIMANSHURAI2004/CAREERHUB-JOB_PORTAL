@@ -115,7 +115,7 @@ function Applications() {
                         <Link to="/account" className="hover:text-blue-600">Account</Link>
                     </nav>
                     <div className="grid gap-6">
-                        <div className="mx-auto grid grid-cols-2 w-full max-w-6xl items-start gap-6">
+                        <div className="mx-auto grid grid-cols-1 w-full max-w-6xl items-start gap-6 lg:grid-cols-2">
                             {applications.length > 0 ? (
                                 applications.map((application, index) => (
                                     <Card key={index} className="shadow-lg transition-transform transform hover:scale-105 grid col-span-1">

@@ -44,7 +44,7 @@ function AdminDashboardJobs() {
 
             const responseData = await response.json();
             console.log(responseData.data);
-            setJobEntries(responseData.data.slice(0, 5));
+            setJobEntries(responseData.data);
         } catch (error) {
             setErrorMessage(error.message || 'Failed to fetch entries');
         } finally {
