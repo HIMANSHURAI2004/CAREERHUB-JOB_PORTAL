@@ -8,55 +8,56 @@ import { IoIosSearch } from "react-icons/io";
 // Existing categories and jobs data
 const categories = [
   {
-    name: "Finance",
-    icon: "💵",
-    postings: "1,720 postings",
+    name: "Accounting",
+    icon: "💰", // Changed to a money bag for accounting
+    postings: "9,20 postings",
     bgColor: "bg-green-100",
     iconColor: "text-green-600",
   },
   {
     name: "Marketing",
-    icon: "📢",
-    postings: "1,720 postings",
+    icon: "📈", // Changed to a graph to represent marketing growth
+    postings: "1,250 postings",
     bgColor: "bg-pink-100",
     iconColor: "text-pink-600",
   },
   {
     name: "IT Services",
-    icon: "💻",
-    postings: "1,720 postings",
+    icon: "🖥️", // Changed to a computer for IT services
+    postings: "1,545 postings",
     bgColor: "bg-blue-100",
     iconColor: "text-blue-600",
   },
   {
     name: "Data Science",
-    icon: "🔬",
-    postings: "1,720 postings",
+    icon: "📊", // Changed to a bar chart for data science
+    postings: "1,100 postings",
     bgColor: "bg-green-100",
     iconColor: "text-green-600",
   },
   {
     name: "Tech",
-    icon: "🤖",
-    postings: "1,720 postings",
+    icon: "🔧", // Changed to a wrench to represent technology
+    postings: "2,455 postings",
     bgColor: "bg-purple-100",
     iconColor: "text-purple-600",
   },
   {
-    name: "Design",
-    icon: "🍽",
-    postings: "1,720 postings",
+    name: "Graphic Design",
+    icon: "🎨", // Changed to a palette for graphic design
+    postings: "1,320 postings",
     bgColor: "bg-yellow-100",
     iconColor: "text-yellow-600",
   },
   {
-    name: "Sales",
-    icon: "📈",
-    postings: "1,720 postings",
+    name: "Cybersecurity",
+    icon: "🛡️", // Changed to a shield for cybersecurity
+    postings: "640 postings",
     bgColor: "bg-green-100",
     iconColor: "text-green-600",
   },
 ];
+
 
 const Spinner = () => (
   <svg
@@ -177,7 +178,7 @@ function Home() {
         </p>
 
         {/* Search Bar */}
-        <div className="flex justify-center mt-10 space-x-2 rounded-full border border-gray-200  shadow-xl px-4 py-3 w-[800px] mx-auto">
+        <div className="flex justify-center mt-10 space-x-2 rounded-full border border-gray-200  shadow-xl px-4 py-3 md:w-[800px] mx-auto">
           <IoIosSearch  className="text-2xl text-gray-500 my-auto"/>
           <input
             type="text"
