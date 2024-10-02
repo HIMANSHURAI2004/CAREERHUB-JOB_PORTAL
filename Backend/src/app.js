@@ -13,8 +13,8 @@ app.use(cors({
     optionsSuccessStatus: 200,
 }))
 
-app.use(express.json({ limit:"16kb" }));
-app.use(express.urlencoded({extended :true,limit : "16kb"}));
+app.use(express.json({ limit:"5mb" }));
+app.use(express.urlencoded({extended :true,limit : "5mb"}));
 app.use(express.static("public"));
 app.use(cookieParser());
 
@@ -23,9 +23,9 @@ import jobRouter from './routes/job.routes.js'
 import applicationRouter from './routes/application.routes.js'
 
 
-app.use("/api/v1/user",userRouter);
-app.use("/api/v1/job",jobRouter);
-app.use("/api/v1/application",applicationRouter)
+app.use("/user",userRouter);
+app.use("/job",jobRouter);
+app.use("/application",applicationRouter)
 
 app.use((err, req, res, next) => {
     if (err instanceof ApiError) {
