@@ -135,7 +135,6 @@ function AddResume() {
             }
             navigate('/resume');
             const responseData = await response.json();
-            console.log(responseData);
         } catch (error) {
             setErrorMessage(error.message || 'Failed to add resume');
         }

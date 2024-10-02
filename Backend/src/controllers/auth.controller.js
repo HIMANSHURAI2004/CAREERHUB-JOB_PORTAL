@@ -79,8 +79,6 @@ const sendOTP = asyncHandler(async (req, res, next) => {
 
   const otp = generateOTP();
   const otpToken = jwt.sign({ email, otp }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' });
-  console.log(otpToken)
-// 
   try {
     await sendSignUpOTPEmail(email, otp);
   } catch (error) {
@@ -106,7 +104,6 @@ const registerUser = asyncHandler(async (req, res) => {
     
     // Handle image upload to Cloudinary if provided
     const imageLocalPath = req.files?.image?.[0]?.path;
-    console.log(imageLocalPath)
     if (imageLocalPath) {
       image = await uploadOnCloudinary(imageLocalPath);
     }
@@ -770,7 +767,6 @@ const verifyOTP = asyncHandler(async (req, res) => {
 
   try {
     const decoded = jwt.verify(otpToken, process.env.ACCESS_TOKEN_SECRET);
-    console.log(decoded);
     
     if (decoded.email !== email || decoded.otp !== otp) {
       throw new ApiError(400, "Invalid OTP");

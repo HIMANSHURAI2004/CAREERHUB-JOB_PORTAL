@@ -69,8 +69,9 @@ const UserDashboard = () => {
       if (!response.ok) {
         throw new Error('Failed to fetch jobs');
       }
-
+      console.log("responce : ",response)
       const responseData = await response.json();
+      console.log("responcedata : ",responseData)
       setJobs(responseData.data);
     } catch (error) {
       setErrorMessage(error.message || 'Failed to fetch jobs');

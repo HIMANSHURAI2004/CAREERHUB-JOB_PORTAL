@@ -62,7 +62,6 @@ function AdminDashboardApplications() {
           }
     
           const responseData = await response.json();
-          console.log(responseData.data);
           setApplicationEntries(responseData.data);
         } catch (error) {
           setErrorMessage(error.message || 'Failed to fetch entries');

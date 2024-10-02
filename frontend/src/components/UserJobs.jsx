@@ -124,7 +124,6 @@ function UserJobs() {
                     description: "Job updated successfully.",
                 });
 
-                console.log(responseData);
                 fetchUserJobs(); 
                 setEditingJobId(null);
                 setEditingJob({});
