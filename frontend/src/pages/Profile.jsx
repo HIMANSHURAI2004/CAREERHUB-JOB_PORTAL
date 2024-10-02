@@ -42,6 +42,7 @@ function Profile() {
         credentials: "include",
       });
       const data = await response.json();
+      console.log(data)
       setUserData(data?.data);
       setImage(data?.data?.image);
       setEditData({
@@ -51,6 +52,7 @@ function Profile() {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
+      console.log(error);
       setLoading(false);
     }
   }

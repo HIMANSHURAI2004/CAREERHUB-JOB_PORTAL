@@ -33,9 +33,10 @@ function Navbar() {
             'Content-Type': 'application/json',
           },
         });
-
+        console.log(response);
         if (response.ok) {
           const userData = await response.json();
+          console.log(userData)
           setIsLoggedIn(true);
           setUserData(userData);
         } else {
@@ -45,6 +46,7 @@ function Navbar() {
       } catch (error) {
         setIsLoggedIn(false);
         setUserData(null);
+        console.log('Failed to fetch user:', error);
         console.error('Failed to fetch user:', error);
       }
     };
@@ -80,6 +82,7 @@ function Navbar() {
         console.error('Failed to logout:', response.statusText);
       }
     } catch (error) {
+      console.log(error)
       console.error('Failed to logout:', error);
     }
   };
