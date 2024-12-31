@@ -205,7 +205,7 @@ function Dashboard() {
         <Sheet>
           <SheetTrigger asChild>
             <Button
-              variant="outline"
+              variant="secondary"
               size="icon"
               className="shrink-0 md:hidden"
             >
@@ -368,7 +368,7 @@ function Dashboard() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {jobEntries.map((entry) => (
+                  {jobEntries.slice(0,10).map((entry) => (
                     jobEntries.length > 0 && (
                       <TableRow key={entry._id}>
                         <TableCell>
@@ -392,7 +392,7 @@ function Dashboard() {
               <CardTitle>Recent Users</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-8">
-              {userEntries.map((entry) =>
+              {userEntries.slice(0,12).map((entry) =>
                 entry.role !== 'admin' &&
                 (
                   <div key={entry._id} className="flex items-center gap-4">

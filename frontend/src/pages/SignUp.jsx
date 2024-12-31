@@ -179,11 +179,15 @@ return (
                     <img src={logo} alt='' className='w-24 h-6 mx-auto' />
                     <div className='my-4'>
                         <h2 className='font-bold text-xl lg:text-3xl md:text-2xl text-center lg:text-start md:text-start'>
-                            Create your Account
+                            {
+                                step === 1 ? 'Create your Account' : 'Verify your Account'                            
+                            }
                         </h2>
-                        <p className='text-slate-700 text-sm'>
-                            Join us today and take the first step towards your next great
-                            opportunity.
+                        <p className='text-slate-700 text-sm mt-2'>
+                            {
+                                step === 1 ? 'Join us today and take the first step towards your next great opportunity.' : 'Enter the OTP sent to your email address to verify your account.'
+                            }
+                            
                         </p>
                     </div>
                     {step === 1 && (
