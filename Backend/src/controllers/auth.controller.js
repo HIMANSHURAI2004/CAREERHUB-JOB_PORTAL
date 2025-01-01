@@ -290,9 +290,11 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 const getUser = asyncHandler(async (req, res) => {
   const { id: userId } = req.params;
-
+  console.log(userId);
+  
   const user = await User.findOne({ _id: userId });
-
+  console.log(user);
+  
   if (!user) {
     throw new ApiError(404, "user Not Found");
   }
