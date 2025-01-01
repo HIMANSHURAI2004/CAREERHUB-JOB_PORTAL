@@ -7,11 +7,11 @@ dotenv.config({
     path : './.env'
 })
 
-
+const PORT =process.env.PORT || 3000;
 connectDB()
 .then(() => {
     try {
-        app.listen(process.env.PORT || 3000, () => {
+        app.listen(PORT, () => {
             console.log(`Server is running at port : ${process.env.PORT}`);
         });
     } catch (error) {
